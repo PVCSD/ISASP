@@ -7,52 +7,59 @@ library(DT)
 library(shinydashboard)
 
 shinyUI(
+  dashboardPage(
+    dashboardHeader(title = "ISASP Dashboard"),
 
-    dashboardPage(
-        dashboardHeader(title="ISASP Dashboard"),
+    ## Sidebar with controls
+    dashboardSidebar(
+      fileInput("file1", "Upload the ISASP Data File",
+        multiple = TRUE,
+        accept = c(
+          "text/csv",
+          "text/comma-separated-values,text/plain",
+          ".txt"
+        )
+      ),
+      selectInput(
+        "tableType",
+        label = "Table Type",
+        choices = c(
+          "Number of Questions",
+          "Mean Scores",
+          "Median Scores"
+        )
+      ),
 
-        ##Sidebar with controls
-        dashboardSidebar(
-
-                fileInput("file1", "Upload the ISASP Data File",
-                                         multiple = TRUE,
-                                         accept = c("text/csv",
-                                                    "text/comma-separated-values,text/plain",
-                                                    ".txt")
-                               ),
-                               selectInput(
-                                   "tableType", label = "Table Type",
-                                   choices = c("Number of Questions",
-                                               "Mean Scores",
-                                               "Median Scores")
-
-
-                    ),
-
-                           h4("Filter By Demo"),
-                           checkboxGroupInput("demos", label = "Race",
-                                              choiceNames =  c("American Indian or Alaskan", "Asian", "African American",
-                                                               "Hispanic", "Hawaiian / Pacific Islander", "white"),
-                                              choiceValues = c("AmericanIndianorAlaskan","Asian", "AfricanAmerican",
-                                                               "HispanicLatino", "HawaiianPacificIslander", "White")),
-
-                           checkboxGroupInput("programs", label = "Group",
-                                              choiceNames =  c("Military Connected", "Special Ed", "504 Plan",
-                                                               "Free/Reduced Lunch", "GT", "ELL", "T1L", "T1M" , "Homeless"),
-                                              choiceValues = c("MilitaryConnected","SE", "plan504",
-                                                               "FRL", "GT", "ELL", "T1L","T1M", "Homeless" ))
-
-
-
-
-
-
+      h4("Filter By Demo"),
+      checkboxGroupInput("demos",
+        label = "Race",
+        choiceNames = c(
+          "American Indian or Alaskan", "Asian", "African American",
+          "Hispanic", "Hawaiian / Pacific Islander", "white"
         ),
-        dashboardBody(
-            uiOutput("tableOutput")
-            ),
-        title = "ISASP Dashboard"
-    )
+        choiceValues = c(
+          "AmericanIndianorAlaskan", "Asian", "AfricanAmerican",
+          "HispanicLatino", "HawaiianPacificIslander", "White"
+        )
+      ),
+
+      checkboxGroupInput("programs",
+        label = "Group",
+        choiceNames = c(
+          "Military Connected", "Special Ed", "504 Plan",
+          "Free/Reduced Lunch", "GT", "ELL", "T1L", "T1M", "Homeless"
+        ),
+        choiceValues = c(
+          "MilitaryConnected", "SE", "plan504",
+          "FRL", "GT", "ELL", "T1L", "T1M", "Homeless"
+        )
+      )
+    ),
+    dashboardBody(
+      uiOutput("tableOutput")
+    ),
+    title = "ISASP Dashboard"
+  )
 )
 
 #     # Application title

@@ -526,9 +526,9 @@ shinyServer(function(input, output) {
 
   # conditional formatting
   column_cond_format <- function(col_max, col_min, pal = c("#ea4335", "white", "#34a853")) {
-    stop_color_max <- col_max ## set as max(column)
-    stop_color_min <- col_min
-    brks <- quantile(c(stop_color_min, stop_color_max), probs = seq(.05, .95, .05), na.rm = TRUE) ## set max/min
+    stop_color_max <- 100 ## set as max(column)
+    stop_color_min <- 0
+    brks <- quantile(c(0, stop_color_max), probs = seq(.05, .95, .05), na.rm = TRUE) ## set max/min
     myPal <- shades::gradient(pal, 18, space = "Lab")
     clrs <- c(myPal[1], myPal, myPal[length(myPal)])
 

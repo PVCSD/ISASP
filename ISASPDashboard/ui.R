@@ -31,28 +31,25 @@ shinyUI(
       ),
 
       h4("Filter By Demo"),
-      checkboxGroupInput("demos",
+      selectizeInput("demos",
         label = "Race",
-        choiceNames = c(
-          "American Indian or Alaskan", "Asian", "African American",
-          "Hispanic", "Hawaiian / Pacific Islander", "white"
-        ),
-        choiceValues = c(
-          "AmericanIndianorAlaskan", "Asian", "AfricanAmerican",
-          "HispanicLatino", "HawaiianPacificIslander", "White"
-        )
+        choices = c(
+          "American Indian or Alaskan"="AmericanIndianorAlaskan",
+          "Asian"="Asian", "African American"="AfricanAmerican",
+          "Hispanic"="HispanicLatino", "Hawaiian / Pacific Islander"="HawaiianPacificIslander",
+          "white"="White"
+        ), multiple = T
+
       ),
 
-      checkboxGroupInput("programs",
+      selectizeInput("programs",
         label = "Group",
-        choiceNames = c(
-          "Military Connected", "Special Ed", "504 Plan",
-          "Free/Reduced Lunch", "GT", "ELL", "T1L", "T1M", "Homeless"
-        ),
-        choiceValues = c(
-          "MilitaryConnected", "SE", "plan504",
-          "FRL", "GT", "ELL", "T1L", "T1M", "Homeless"
-        )
+        choices = c(
+          "Military Connected" = "MilitaryConnected", "Special Ed" = "SE",
+          "504 Plan"="plan504","Free/Reduced Lunch" ="FRL",
+          "GT" = "GT", "ELL" = "ELL", "T1L" =  "T1L",
+          "T1M"= "T1M", "Homeless" = "Homeless"
+        ), multiple=T
       )
     ),
     dashboardBody(

@@ -217,7 +217,7 @@ shinyServer(function(input, output) {
       sdf <- StudentData()
 
       selected_races <- input$demos
-      selected_programs <- input$groups
+      selected_programs <- input$programs
 
       TidyData() %>%
         left_join(sdf) %>%
@@ -272,7 +272,7 @@ shinyServer(function(input, output) {
       return(meanSubScores)
     } else if (filterPrograms() == T) {
       sdf <- StudentData()
-      selected_programs <- input$groups
+      selected_programs <- input$programs
 
       TidyData() %>%
         left_join(sdf) %>%
@@ -341,7 +341,7 @@ shinyServer(function(input, output) {
       sdf <- StudentData()
 
       selected_races <- input$demos
-      selected_programs <- input$groups
+      selected_programs <- input$programs
 
       TidyData() %>%
         left_join(sdf) %>%
@@ -398,7 +398,7 @@ shinyServer(function(input, output) {
       return(medianSubScores2)
     } else if (filterPrograms() == T) {
       sdf <- StudentData()
-      selected_programs <- input$groups
+      selected_programs <- input$programs
 
       TidyData() %>%
         left_join(sdf) %>%

@@ -224,7 +224,7 @@ shinyServer(function(input, output) {
     return(questions)
   })
   ###### Number of Questions: Math ######
-  NumQuestions <- reactive({
+  NumQuestionsMath <- reactive({
     if (fileReady() == F) {
       return(NULL)
     }
@@ -241,7 +241,7 @@ shinyServer(function(input, output) {
     return(questions)
   })
   ###### Number of Questions: Science ######
-  NumQuestions <- reactive({
+  NumQuestionsScience <- reactive({
     if (fileReady() == F) {
       return(NULL)
     }
@@ -282,17 +282,57 @@ shinyServer(function(input, output) {
 
   #### Mean Score for subtests by grade ####
   ###### Mean Score: Reading ######
-  ###### Mean Score: Language/Writing ######
-  ###### Mean Score: Math ######
-  ###### Mean Score: Science ######
-
-
-
-  MeanSubTestScores <- reactive({
+  MeanSubTestScoresReading <- reactive({
     if (fileReady() == F) {
       return(NULL)
     }
-    sdf <- StudentData()
+
+    df <- FilteredData()
+
+    df %>%
+      summarise(meanScore = mean(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = meanScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        "KID", "CS", "IKI"
+      ) -> meanSubScores
+
+    return(meanSubScores)
+
+  })
+
+  ###### Mean Score: Language/Writing ######
+  MeanSubTestScoresLW <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+
+    df <- FilteredData()
+
+    # if no students return Nothing
+    if (length(df) < 1) {
+      return(NULL)
+    }
+
+    df %>%
+      summarise(meanScore = mean(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = meanScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        "RPK", "PDW", "TTP", "COSE-KOL", "VAU"
+      ) -> meanSubScores
+
+    return(meanSubScores)
+
+  })
+
+  ###### Mean Score: Math ######
+  MeanSubTestScoresMath <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
 
     df <- FilteredData()
 
@@ -306,9 +346,6 @@ shinyServer(function(input, output) {
       arrange(Grade) %>%
       select(
         "Grade",
-        "KID", "CS", "IKI",
-        "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
-        "LS", "PS", "ES",
         "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
       ) -> meanSubScores
 
@@ -316,7 +353,133 @@ shinyServer(function(input, output) {
 
   })
 
+
+  ###### Mean Score: Science ######
+  MeanSubTestScoresScience <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+
+    df <- FilteredData()
+
+    # if no students return Nothing
+    if (length(df) < 1) {
+      return(NULL)
+    }
+    df %>%
+      summarise(meanScore = mean(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = meanScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        "LS", "PS", "ES"
+      ) -> meanSubScores
+
+    return(meanSubScores)
+
+  })
+
   #### Median Score for subtests by grade ####
+
+  ###### Median Score: Reading ######
+  MedianSubTestScoresReading <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+
+    df <- FilteredData()
+
+    df %>%
+      summarise(medianScore = median(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = medianScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        "KID", "CS", "IKI"
+      ) -> medianSubScores
+
+    return(medianSubScores)
+
+  })
+
+  ###### median Score: Language/Writing ######
+  MedianSubTestScoresLW <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+
+    df <- FilteredData()
+
+    # if no students return Nothing
+    if (length(df) < 1) {
+      return(NULL)
+    }
+
+    df %>%
+      summarise(medianScore = median(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = medianScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        "RPK", "PDW", "TTP", "COSE-KOL", "VAU"
+      ) -> medianSubScores
+
+    return(medianSubScores)
+
+  })
+
+  ###### median Score: Math ######
+  MedianSubTestScoresMath <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+
+    df <- FilteredData()
+
+    # if no students return Nothing
+    if (length(df) < 1) {
+      return(NULL)
+    }
+    df %>%
+      summarise(medianScore = median(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = medianScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
+      ) -> medianSubScores
+
+    return(medianSubScores)
+
+  })
+
+
+  ###### median Score: Science ######
+  MedianSubTestScoresScience <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+
+    df <- FilteredData()
+
+    # if no students return Nothing
+    if (length(df) < 1) {
+      return(NULL)
+    }
+    df %>%
+      summarise(medianScore = median(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = medianScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        "LS", "PS", "ES"
+      ) -> medianSubScores
+
+    return(medianSubScores)
+
+  })
+
+
   MedianSubTestScores <- reactive({
     if (fileReady() == F) {
       return(NULL)
@@ -401,25 +564,234 @@ shinyServer(function(input, output) {
   ##### UI OPTIONS #####
 
   # What table to show
+
+  ## Reading
+  output$tableOutputReading <- renderUI({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+    if (input$tableType == "Number of Questions") {
+      output$reading <- renderDataTable(datatable(NumQuestionsReading(), rownames = FALSE, options = list(dom = "t")) %>%
+                                     formatRound(columns = c(2:4), digits = 0) %>%
+                                     formatStyle(columns = c(1), fontWeight = "bold") %>%
+                                     formatStyle(columns = c(1), border = "1px solid #ddd") %>%
+                                     formatStyle(columns = c(2:5), border = "1px solid #ddd"))
+      dataTableOutput("reading")
+    }
+    else if (input$tableType == "Mean Scores") {
+      output$reading <- renderDataTable(datatable(MeanSubTestScoresReading(),
+                                             rownames = FALSE,
+                                             options = list(
+                                               dom = "t"
+                                             )
+      ) %>%
+        formatRound(columns = c(2:4), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(2:4), backgroundColor = styleInterval(
+          cuts = column_cond_format(col_max = 100, col_min = 0)$brks,
+          values = column_cond_format(col_max = 100, col_min = 0)$clrs
+        )) %>%
+        formatString(columns = c(2:4), suffix = "%") %>%
+        formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5"))
+      dataTableOutput("reading")
+    }
+    else if (input$tableType == "Median Scores") {
+      output$reading <- renderDataTable(datatable(MedianSubTestScoresReading(),
+                                             rownames = FALSE,
+                                             options = list(
+                                               dom = "t"
+                                             )
+      ) %>%
+        formatRound(columns = c(2:4), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(2:4), backgroundColor = styleInterval(
+          cuts = column_cond_format(col_max = 100, col_min = 0)$brks,
+          values = column_cond_format(col_max = 100, col_min = 0)$clrs
+        )) %>%
+        formatString(columns = c(2:4), suffix = "%") %>%
+        formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5"))
+      dataTableOutput("reading")
+    }
+    else {
+      return(NULL)
+    }
+  })
+
+  ## Language/Writing
+  output$tableOutputLW <- renderUI({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+    if (input$tableType == "Number of Questions") {
+      output$LW <- renderDataTable(datatable(NumQuestionsLW(), rownames = FALSE, options = list(dom = "t")) %>%
+                                     formatRound(columns = c(2:10), digits = 0) %>%
+                                     formatStyle(columns = c(1), fontWeight = "bold") %>%
+                                     formatStyle(columns = c(1), border = "1px solid #ddd") %>%
+                                     formatStyle(columns = c(2:10), border = "1px solid #ddd"))
+      dataTableOutput("LW")
+    }
+    else if (input$tableType == "Mean Scores") {
+      output$LW <- renderDataTable(datatable(MeanSubTestScoresLW(),
+                                             rownames = FALSE,
+                                             options = list(
+                                               dom = "t"
+                                             )
+      ) %>%
+        formatRound(columns = c(2:10), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(2:10), backgroundColor = styleInterval(
+          cuts = column_cond_format(col_max = 100, col_min = 0)$brks,
+          values = column_cond_format(col_max = 100, col_min = 0)$clrs
+        )) %>%
+        formatString(columns = c(2:10), suffix = "%") %>%
+        formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5"))
+      dataTableOutput("LW")
+    }
+    else if (input$tableType == "Median Scores") {
+      output$LW <- renderDataTable(datatable(MedianSubTestScoresLW(),
+                                             rownames = FALSE,
+                                             options = list(
+                                               dom = "t"
+                                             )
+      ) %>%
+        formatRound(columns = c(2:10), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(2:10), backgroundColor = styleInterval(
+          cuts = column_cond_format(col_max = 100, col_min = 0)$brks,
+          values = column_cond_format(col_max = 100, col_min = 0)$clrs
+        )) %>%
+        formatString(columns = c(2:10), suffix = "%") %>%
+        formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5"))
+      dataTableOutput("LW")
+    }
+    else {
+      return(NULL)
+    }
+  })
+
+  ## Math
+  output$tableOutputMath <- renderUI({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+    if (input$tableType == "Number of Questions") {
+      output$Math <- renderDataTable(datatable(NumQuestionsMath(), rownames = FALSE, options = list(dom = "t")) %>%
+                                     formatRound(columns = c(2:25), digits = 0) %>%
+                                     formatStyle(columns = c(1), fontWeight = "bold") %>%
+                                     formatStyle(columns = c(1), border = "1px solid #ddd") %>%
+                                     formatStyle(columns = c(2:25), border = "1px solid #ddd"))
+      dataTableOutput("Math")
+    }
+    else if (input$tableType == "Mean Scores") {
+      output$Math <- renderDataTable(datatable(MeanSubTestScoresMath(),
+                                             rownames = FALSE,
+                                             options = list(
+                                               dom = "t"
+                                             )
+      ) %>%
+        formatRound(columns = c(2:25), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(2:25), backgroundColor = styleInterval(
+          cuts = column_cond_format(col_max = 100, col_min = 0)$brks,
+          values = column_cond_format(col_max = 100, col_min = 0)$clrs
+        )) %>%
+        formatString(columns = c(2:25), suffix = "%") %>%
+        formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5"))
+      dataTableOutput("Math")
+    }
+    else if (input$tableType == "Median Scores") {
+      output$Math <- renderDataTable(datatable(MedianSubTestScoresMath(),
+                                             rownames = FALSE,
+                                             options = list(
+                                               dom = "t"
+                                             )
+      ) %>%
+        formatRound(columns = c(2:25), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(2:25), backgroundColor = styleInterval(
+          cuts = column_cond_format(col_max = 100, col_min = 0)$brks,
+          values = column_cond_format(col_max = 100, col_min = 0)$clrs
+        )) %>%
+        formatString(columns = c(2:25), suffix = "%") %>%
+        formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5"))
+      dataTableOutput("Math")
+    }
+    else {
+      return(NULL)
+    }
+  })
+
+  ## Science
+  output$tableOutputScience <- renderUI({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+    if (input$tableType == "Number of Questions") {
+      output$Science <- renderDataTable(datatable(NumQuestionsScience(), rownames = FALSE, options = list(dom = "t")) %>%
+                                       formatRound(columns = c(2:25), digits = 0) %>%
+                                       formatStyle(columns = c(1), fontWeight = "bold") %>%
+                                       formatStyle(columns = c(1), border = "1px solid #ddd") %>%
+                                       formatStyle(columns = c(2:25), border = "1px solid #ddd"))
+      dataTableOutput("Science")
+    }
+    else if (input$tableType == "Mean Scores") {
+      output$Science <- renderDataTable(datatable(MeanSubTestScoresScience(),
+                                               rownames = FALSE,
+                                               options = list(
+                                                 dom = "t"
+                                               )
+      ) %>%
+        formatRound(columns = c(2:25), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(2:25), backgroundColor = styleInterval(
+          cuts = column_cond_format(col_max = 100, col_min = 0)$brks,
+          values = column_cond_format(col_max = 100, col_min = 0)$clrs
+        )) %>%
+        formatString(columns = c(2:25), suffix = "%") %>%
+        formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5"))
+      dataTableOutput("Science")
+    }
+    else if (input$tableType == "Median Scores") {
+      output$Science <- renderDataTable(datatable(MedianSubTestScoresScience(),
+                                               rownames = FALSE,
+                                               options = list(
+                                                 dom = "t"
+                                               )
+      ) %>%
+        formatRound(columns = c(2:25), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(2:25), backgroundColor = styleInterval(
+          cuts = column_cond_format(col_max = 100, col_min = 0)$brks,
+          values = column_cond_format(col_max = 100, col_min = 0)$clrs
+        )) %>%
+        formatString(columns = c(2:25), suffix = "%") %>%
+        formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5"))
+      dataTableOutput("Science")
+    }
+    else {
+      return(NULL)
+    }
+  })
+
   output$tableOutput <- renderUI({
     if (fileReady() == F) {
       return(NULL)
     }
     if (input$tableType == "Number of Questions") {
-      output$aa <- renderDataTable(datatable(NumQuestions(), rownames = FALSE, options = list(dom = "t")) %>%
-        formatRound(columns = c(2:24), digits = 0) %>%
-        formatStyle(columns = c(1), fontWeight = "bold") %>%
-        formatStyle(columns = c(1), border = "1px solid #ddd") %>%
-        formatStyle(columns = c(2:5), border = "1px solid #ddd"))
+      output$aa <- renderDataTable(datatable(NumQuestionsReading(), rownames = FALSE, options = list(dom = "t")) %>%
+                                     formatRound(columns = c(2:24), digits = 0) %>%
+                                     formatStyle(columns = c(1), fontWeight = "bold") %>%
+                                     formatStyle(columns = c(1), border = "1px solid #ddd") %>%
+                                     formatStyle(columns = c(2:5), border = "1px solid #ddd"))
       dataTableOutput("aa")
     }
     else if (input$tableType == "Mean Scores") {
-      output$aa <- renderDataTable(datatable(MeanSubTestScores(),
-        rownames = FALSE,
-        options = list(
-          dom = "t",
-          columnDefs = list(list(className = "dt-center", targets = 0:4))
-        )
+      output$aa <- renderDataTable(datatable(MeanSubTestScoresReading(),
+                                             rownames = FALSE,
+                                             options = list(
+                                               dom = "t",
+                                               columnDefs = list(list(className = "dt-center", targets = 0:4))
+                                             )
       ) %>%
         formatRound(columns = c(2:25), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -432,12 +804,12 @@ shinyServer(function(input, output) {
       dataTableOutput("aa")
     }
     else if (input$tableType == "Median Scores") {
-      output$aa <- renderDataTable(datatable(MedianSubTestScores(),
-        rownames = FALSE,
-        options = list(
-          dom = "t",
-          columnDefs = list(list(className = "dt-center", targets = 0:4))
-        )
+      output$aa <- renderDataTable(datatable(MedianSubTestScoresReading(),
+                                             rownames = FALSE,
+                                             options = list(
+                                               dom = "t",
+                                               columnDefs = list(list(className = "dt-center", targets = 0:4))
+                                             )
       ) %>%
         formatRound(columns = c(2:25), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -454,6 +826,24 @@ shinyServer(function(input, output) {
     }
   })
 
+
+output$demo <- renderTable({
+  FilteredData()->df
+
+  df %>%
+    summarise(meanScore = mean(pctCorrect)) %>%
+    pivot_wider(names_from = testLable, values_from = meanScore) %>%
+    arrange(Grade) %>%
+    select(
+      "Grade",
+      "KID", "CS", "IKI"
+    )->test
+
+  return(test)
+
+}
+
+)
 
   # filter by school
   output$buildingFilter <- renderUI({
@@ -501,7 +891,6 @@ shinyServer(function(input, output) {
     } else {
       return(FALSE)
     }
-    return(FALSE)
   })
 
   # programs selected?
@@ -511,7 +900,6 @@ shinyServer(function(input, output) {
     } else {
       return(FALSE)
     }
-    return(FALSE)
   })
 
 

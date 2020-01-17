@@ -299,7 +299,6 @@ shinyServer(function(input, output) {
       ) -> meanSubScores
 
     return(meanSubScores)
-
   })
 
   ###### Mean Score: Language/Writing ######
@@ -325,7 +324,6 @@ shinyServer(function(input, output) {
       ) -> meanSubScores
 
     return(meanSubScores)
-
   })
 
   ###### Mean Score: Math ######
@@ -350,7 +348,6 @@ shinyServer(function(input, output) {
       ) -> meanSubScores
 
     return(meanSubScores)
-
   })
 
 
@@ -376,7 +373,6 @@ shinyServer(function(input, output) {
       ) -> meanSubScores
 
     return(meanSubScores)
-
   })
 
   #### Median Score for subtests by grade ####
@@ -399,7 +395,6 @@ shinyServer(function(input, output) {
       ) -> medianSubScores
 
     return(medianSubScores)
-
   })
 
   ###### median Score: Language/Writing ######
@@ -425,7 +420,6 @@ shinyServer(function(input, output) {
       ) -> medianSubScores
 
     return(medianSubScores)
-
   })
 
   ###### median Score: Math ######
@@ -450,7 +444,6 @@ shinyServer(function(input, output) {
       ) -> medianSubScores
 
     return(medianSubScores)
-
   })
 
 
@@ -476,7 +469,6 @@ shinyServer(function(input, output) {
       ) -> medianSubScores
 
     return(medianSubScores)
-
   })
 
 
@@ -505,7 +497,6 @@ shinyServer(function(input, output) {
       ) -> meanSubScores
 
     return(meanSubScores)
-
   })
 
 
@@ -528,15 +519,13 @@ shinyServer(function(input, output) {
 
     TidyData() %>%
       left_join(sdf) %>%
-      group_by(testLable, Grade)-> dfJoined
+      group_by(testLable, Grade) -> dfJoined
 
     return(dfJoined)
   })
 
   #### Filtered Data ####
   FilteredData <- reactive({
-
-
     selected_races <- input$demos
     selected_programs <- input$programs
 
@@ -545,20 +534,19 @@ shinyServer(function(input, output) {
         filter_at(selected_races, any_vars(. != 0)) %>%
         filter_at(selected_programs, any_vars(. != 0)) -> df
     }
-    else if(filterDemo() == T){
+    else if (filterDemo() == T) {
       TidyDataWithDemos() %>%
         filter_at(selected_races, any_vars(. != 0)) -> df
     }
-    else if(filterPrograms() == T){
+    else if (filterPrograms() == T) {
       TidyDataWithDemos() %>%
         filter_at(selected_programs, any_vars(. != 0)) -> df
     }
-    else{
+    else {
       TidyDataWithDemos() -> df
     }
 
     return(df)
-
   })
 
   ##### UI OPTIONS #####
@@ -572,18 +560,18 @@ shinyServer(function(input, output) {
     }
     if (input$tableType == "Number of Questions") {
       output$reading <- renderDataTable(datatable(NumQuestionsReading(), rownames = FALSE, options = list(dom = "t")) %>%
-                                     formatRound(columns = c(2:4), digits = 0) %>%
-                                     formatStyle(columns = c(1), fontWeight = "bold") %>%
-                                     formatStyle(columns = c(1), border = "1px solid #ddd") %>%
-                                     formatStyle(columns = c(2:5), border = "1px solid #ddd"))
+        formatRound(columns = c(2:4), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(1), border = "1px solid #ddd") %>%
+        formatStyle(columns = c(2:5), border = "1px solid #ddd"))
       dataTableOutput("reading")
     }
     else if (input$tableType == "Mean Scores") {
       output$reading <- renderDataTable(datatable(MeanSubTestScoresReading(),
-                                             rownames = FALSE,
-                                             options = list(
-                                               dom = "t"
-                                             )
+        rownames = FALSE,
+        options = list(
+          dom = "t"
+        )
       ) %>%
         formatRound(columns = c(2:4), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -597,10 +585,10 @@ shinyServer(function(input, output) {
     }
     else if (input$tableType == "Median Scores") {
       output$reading <- renderDataTable(datatable(MedianSubTestScoresReading(),
-                                             rownames = FALSE,
-                                             options = list(
-                                               dom = "t"
-                                             )
+        rownames = FALSE,
+        options = list(
+          dom = "t"
+        )
       ) %>%
         formatRound(columns = c(2:4), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -624,18 +612,18 @@ shinyServer(function(input, output) {
     }
     if (input$tableType == "Number of Questions") {
       output$LW <- renderDataTable(datatable(NumQuestionsLW(), rownames = FALSE, options = list(dom = "t")) %>%
-                                     formatRound(columns = c(2:10), digits = 0) %>%
-                                     formatStyle(columns = c(1), fontWeight = "bold") %>%
-                                     formatStyle(columns = c(1), border = "1px solid #ddd") %>%
-                                     formatStyle(columns = c(2:10), border = "1px solid #ddd"))
+        formatRound(columns = c(2:10), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(1), border = "1px solid #ddd") %>%
+        formatStyle(columns = c(2:10), border = "1px solid #ddd"))
       dataTableOutput("LW")
     }
     else if (input$tableType == "Mean Scores") {
       output$LW <- renderDataTable(datatable(MeanSubTestScoresLW(),
-                                             rownames = FALSE,
-                                             options = list(
-                                               dom = "t"
-                                             )
+        rownames = FALSE,
+        options = list(
+          dom = "t"
+        )
       ) %>%
         formatRound(columns = c(2:10), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -649,10 +637,10 @@ shinyServer(function(input, output) {
     }
     else if (input$tableType == "Median Scores") {
       output$LW <- renderDataTable(datatable(MedianSubTestScoresLW(),
-                                             rownames = FALSE,
-                                             options = list(
-                                               dom = "t"
-                                             )
+        rownames = FALSE,
+        options = list(
+          dom = "t"
+        )
       ) %>%
         formatRound(columns = c(2:10), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -676,18 +664,18 @@ shinyServer(function(input, output) {
     }
     if (input$tableType == "Number of Questions") {
       output$Math <- renderDataTable(datatable(NumQuestionsMath(), rownames = FALSE, options = list(dom = "t")) %>%
-                                     formatRound(columns = c(2:25), digits = 0) %>%
-                                     formatStyle(columns = c(1), fontWeight = "bold") %>%
-                                     formatStyle(columns = c(1), border = "1px solid #ddd") %>%
-                                     formatStyle(columns = c(2:25), border = "1px solid #ddd"))
+        formatRound(columns = c(2:25), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(1), border = "1px solid #ddd") %>%
+        formatStyle(columns = c(2:25), border = "1px solid #ddd"))
       dataTableOutput("Math")
     }
     else if (input$tableType == "Mean Scores") {
       output$Math <- renderDataTable(datatable(MeanSubTestScoresMath(),
-                                             rownames = FALSE,
-                                             options = list(
-                                               dom = "t"
-                                             )
+        rownames = FALSE,
+        options = list(
+          dom = "t"
+        )
       ) %>%
         formatRound(columns = c(2:25), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -701,10 +689,10 @@ shinyServer(function(input, output) {
     }
     else if (input$tableType == "Median Scores") {
       output$Math <- renderDataTable(datatable(MedianSubTestScoresMath(),
-                                             rownames = FALSE,
-                                             options = list(
-                                               dom = "t"
-                                             )
+        rownames = FALSE,
+        options = list(
+          dom = "t"
+        )
       ) %>%
         formatRound(columns = c(2:25), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -728,18 +716,18 @@ shinyServer(function(input, output) {
     }
     if (input$tableType == "Number of Questions") {
       output$Science <- renderDataTable(datatable(NumQuestionsScience(), rownames = FALSE, options = list(dom = "t")) %>%
-                                       formatRound(columns = c(2:25), digits = 0) %>%
-                                       formatStyle(columns = c(1), fontWeight = "bold") %>%
-                                       formatStyle(columns = c(1), border = "1px solid #ddd") %>%
-                                       formatStyle(columns = c(2:25), border = "1px solid #ddd"))
+        formatRound(columns = c(2:25), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(1), border = "1px solid #ddd") %>%
+        formatStyle(columns = c(2:25), border = "1px solid #ddd"))
       dataTableOutput("Science")
     }
     else if (input$tableType == "Mean Scores") {
       output$Science <- renderDataTable(datatable(MeanSubTestScoresScience(),
-                                               rownames = FALSE,
-                                               options = list(
-                                                 dom = "t"
-                                               )
+        rownames = FALSE,
+        options = list(
+          dom = "t"
+        )
       ) %>%
         formatRound(columns = c(2:25), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -753,10 +741,10 @@ shinyServer(function(input, output) {
     }
     else if (input$tableType == "Median Scores") {
       output$Science <- renderDataTable(datatable(MedianSubTestScoresScience(),
-                                               rownames = FALSE,
-                                               options = list(
-                                                 dom = "t"
-                                               )
+        rownames = FALSE,
+        options = list(
+          dom = "t"
+        )
       ) %>%
         formatRound(columns = c(2:25), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -779,19 +767,19 @@ shinyServer(function(input, output) {
     }
     if (input$tableType == "Number of Questions") {
       output$aa <- renderDataTable(datatable(NumQuestionsReading(), rownames = FALSE, options = list(dom = "t")) %>%
-                                     formatRound(columns = c(2:24), digits = 0) %>%
-                                     formatStyle(columns = c(1), fontWeight = "bold") %>%
-                                     formatStyle(columns = c(1), border = "1px solid #ddd") %>%
-                                     formatStyle(columns = c(2:5), border = "1px solid #ddd"))
+        formatRound(columns = c(2:24), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(1), border = "1px solid #ddd") %>%
+        formatStyle(columns = c(2:5), border = "1px solid #ddd"))
       dataTableOutput("aa")
     }
     else if (input$tableType == "Mean Scores") {
       output$aa <- renderDataTable(datatable(MeanSubTestScoresReading(),
-                                             rownames = FALSE,
-                                             options = list(
-                                               dom = "t",
-                                               columnDefs = list(list(className = "dt-center", targets = 0:4))
-                                             )
+        rownames = FALSE,
+        options = list(
+          dom = "t",
+          columnDefs = list(list(className = "dt-center", targets = 0:4))
+        )
       ) %>%
         formatRound(columns = c(2:25), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -805,11 +793,11 @@ shinyServer(function(input, output) {
     }
     else if (input$tableType == "Median Scores") {
       output$aa <- renderDataTable(datatable(MedianSubTestScoresReading(),
-                                             rownames = FALSE,
-                                             options = list(
-                                               dom = "t",
-                                               columnDefs = list(list(className = "dt-center", targets = 0:4))
-                                             )
+        rownames = FALSE,
+        options = list(
+          dom = "t",
+          columnDefs = list(list(className = "dt-center", targets = 0:4))
+        )
       ) %>%
         formatRound(columns = c(2:25), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -827,23 +815,20 @@ shinyServer(function(input, output) {
   })
 
 
-output$demo <- renderTable({
-  FilteredData()->df
+  output$demo <- renderTable({
+    FilteredData() -> df
 
-  df %>%
-    summarise(meanScore = mean(pctCorrect)) %>%
-    pivot_wider(names_from = testLable, values_from = meanScore) %>%
-    arrange(Grade) %>%
-    select(
-      "Grade",
-      "KID", "CS", "IKI"
-    )->test
+    df %>%
+      summarise(meanScore = mean(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = meanScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        "KID", "CS", "IKI"
+      ) -> test
 
-  return(test)
-
-}
-
-)
+    return(test)
+  })
 
   # filter by school
   output$buildingFilter <- renderUI({

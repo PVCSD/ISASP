@@ -17,62 +17,62 @@ shinyUI(
         menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
         menuItem("Honors Science", tabName = "cutoffs", icon = icon("flask"))
       )
-
-
     ),
     dashboardBody(
       tabItems(
-        tabItem(tabName = "upload",
-                fluidRow(
-                  fileInput("file1", "Upload the ISASP Data File",
-                            multiple = TRUE,
-                            accept = c(
-                              "text/csv",
-                              "text/comma-separated-values,text/plain",
-                              ".txt"
-                            )
-                  )
-                )
-
+        tabItem(
+          tabName = "upload",
+          box(
+            "upload",
+            fileInput("file1", "Upload the ISASP Data File",
+              multiple = TRUE,
+              accept = c(
+                "text/csv",
+                "text/comma-separated-values,text/plain",
+                ".txt"
+              )
+            )
+          )
         ),
-        tabItem(tabName = "dashboard",
+        tabItem(
+          tabName = "dashboard",
           fluidPage(
-            box("Controls", width = 3,
-                selectInput(
-                  "tableType",
-                  label = "Table Type",
-                  choices = c(
-                    "Number of Questions",
-                    "Mean Scores",
-                    "Median Scores"
-                  )
-                ),
-
-                h4("Filter By Demo"),
-                selectizeInput("demos",
-                               label = "Race",
-                               choices = c(
-                                 "American Indian or Alaskan"="AmericanIndianorAlaskan",
-                                 "Asian"="Asian", "African American"="AfricanAmerican",
-                                 "Hispanic"="HispanicLatino", "Hawaiian / Pacific Islander"="HawaiianPacificIslander",
-                                 "white"="White"
-                               ), multiple = T
-
-                ),
-
-                selectizeInput("programs",
-                               label = "Group",
-                               choices = c(
-                                 "Military Connected" = "MilitaryConnected", "Special Ed" = "SE",
-                                 "504 Plan"="plan504","Free/Reduced Lunch" ="FRL",
-                                 "GT" = "GT", "ELL" = "ELL", "T1L" =  "T1L",
-                                 "T1M"= "T1M", "Homeless" = "Homeless"
-                               ), multiple=T
+            box("Controls",
+              width = 3,
+              selectInput(
+                "tableType",
+                label = "Table Type",
+                choices = c(
+                  "Number of Questions",
+                  "Mean Scores",
+                  "Median Scores"
                 )
+              ),
 
+              h4("Filter By Demo"),
+              selectizeInput("demos",
+                label = "Race",
+                choices = c(
+                  "American Indian or Alaskan" = "AmericanIndianorAlaskan",
+                  "Asian" = "Asian", "African American" = "AfricanAmerican",
+                  "Hispanic" = "HispanicLatino", "Hawaiian / Pacific Islander" = "HawaiianPacificIslander",
+                  "white" = "White"
+                ), multiple = T
+              ),
+
+              selectizeInput("programs",
+                label = "Group",
+                choices = c(
+                  "Military Connected" = "MilitaryConnected", "Special Ed" = "SE",
+                  "504 Plan" = "plan504", "Free/Reduced Lunch" = "FRL",
+                  "GT" = "GT", "ELL" = "ELL", "T1L" = "T1L",
+                  "T1M" = "T1M", "Homeless" = "Homeless"
+                ), multiple = T
+              )
             ),
 
-            tabBox(width=9,
+            tabBox(
+              width = 9,
               title = "Sub Scores",
               tabPanel(
                 id = "tabReading",
@@ -94,13 +94,10 @@ shinyUI(
                 title = "Math",
                 uiOutput("tableOutputMath")
               )
-
             )
           )
         )
       )
-
-
     ),
     title = "ISASP Dashboard"
   )

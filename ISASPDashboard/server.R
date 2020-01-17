@@ -187,6 +187,43 @@ shinyServer(function(input, output) {
 
 
   #### Number of Questions  By Grade ####
+
+
+  ###### Number of Questions: Reading ######
+  NumQuestionsReading <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+    TidyData() %>%
+      group_by(testLable, Grade) %>%
+      summarise(numberofpoints = mean(round(pointsPossible, 1))) %>%
+      na.omit() %>%
+      pivot_wider(names_from = testLable, values_from = numberofpoints) %>%
+      arrange(Grade) %>%
+      select(
+        Grade,
+        KID, CS, IKI
+      ) -> questions
+    return(questions)
+  })
+  ###### Number of Questions: Langauge/Writing ######
+  NumQuestionsLW <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+    TidyData() %>%
+      group_by(testLable, Grade) %>%
+      summarise(numberofpoints = mean(round(pointsPossible, 1))) %>%
+      na.omit() %>%
+      pivot_wider(names_from = testLable, values_from = numberofpoints) %>%
+      arrange(Grade) %>%
+      select(
+        Grade,
+        RPK, PDW, TTP, `COSE-KOL`, VAU
+      ) -> questions
+    return(questions)
+  })
+  ###### Number of Questions: Math ######
   NumQuestions <- reactive({
     if (fileReady() == F) {
       return(NULL)
@@ -195,6 +232,41 @@ shinyServer(function(input, output) {
       group_by(testLable, Grade) %>%
       summarise(numberofpoints = mean(round(pointsPossible, 1))) %>%
       na.omit() %>%
+      pivot_wider(names_from = testLable, values_from = numberofpoints) %>%
+      arrange(Grade) %>%
+      select(
+        Grade,
+        OA, NBT, NF, MD, G, RP, NS, EE, SP, `F`, S, A, N
+      ) -> questions
+    return(questions)
+  })
+  ###### Number of Questions: Science ######
+  NumQuestions <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+    TidyData() %>%
+      group_by(testLable, Grade) %>%
+      summarise(numberofpoints = mean(round(pointsPossible, 1))) %>%
+      na.omit() %>%
+      pivot_wider(names_from = testLable, values_from = numberofpoints) %>%
+      arrange(Grade) %>%
+      select(
+        Grade,
+        LS, PS, ES
+      ) -> questions
+    return(questions)
+  })
+
+
+  ###### Number of Questions: ALL ######
+  NumQuestions <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+    TidyData() %>%
+      group_by(testLable, Grade) %>%
+      summarise(numberofpoints = mean(round(pointsPossible, 1))) %>%
       pivot_wider(names_from = testLable, values_from = numberofpoints) %>%
       arrange(Grade) %>%
       select(
@@ -209,127 +281,39 @@ shinyServer(function(input, output) {
 
 
   #### Mean Score for subtests by grade ####
+  ###### Mean Score: Reading ######
+  ###### Mean Score: Language/Writing ######
+  ###### Mean Score: Math ######
+  ###### Mean Score: Science ######
+
+
+
   MeanSubTestScores <- reactive({
     if (fileReady() == F) {
       return(NULL)
     }
-    if (filterDemo() == T & filterPrograms() == T) {
-      sdf <- StudentData()
+    sdf <- StudentData()
 
-      selected_races <- input$demos
-      selected_programs <- input$programs
+    df <- FilteredData()
 
-      TidyData() %>%
-        left_join(sdf) %>%
-        group_by(testLable, Grade) %>%
-        filter_at(selected_races, any_vars(. != 0)) %>%
-        filter_at(selected_programs, any_vars(. != 0)) -> df
-
-      # if no students return Nothing
-      if (length(df) < 1) {
-        return(NULL)
-      }
-
-      df %>%
-        summarise(meanScore = mean(pctCorrect)) %>%
-        pivot_wider(names_from = testLable, values_from = meanScore) %>%
-        arrange(Grade) %>%
-        select(
-          "Grade",
-          "KID", "CS", "IKI",
-          "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
-          "LS", "PS", "ES",
-          "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
-        ) -> meanSubScores
-
-      return(meanSubScores)
-    } else if (filterDemo() == T) {
-      sdf <- StudentData()
-      selected_races <- input$demos
-
-      TidyData() %>%
-        left_join(sdf) %>%
-        group_by(testLable, Grade) %>%
-        filter_at(selected_races, any_vars(. != 0)) -> df
-
-      # if no students return Nothing
-      if (length(df) < 1) {
-        return(NULL)
-      }
-
-      df %>%
-        summarise(meanScore = mean(pctCorrect)) %>%
-        pivot_wider(names_from = testLable, values_from = meanScore) %>%
-        arrange(Grade) %>%
-        select(
-          "Grade",
-          "KID", "CS", "IKI",
-          "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
-          "LS", "PS", "ES",
-          "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
-        ) -> meanSubScores
-
-      return(meanSubScores)
-    } else if (filterPrograms() == T) {
-      sdf <- StudentData()
-      selected_programs <- input$programs
-
-      TidyData() %>%
-        left_join(sdf) %>%
-        group_by(testLable, Grade) %>%
-        filter_at(selected_programs, any_vars(. != 0)) -> df
-
-      # if no students return Nothing
-      if (length(df$Grade) < 108) {
-        stop("Not Enough Data In Selection")
-      }
-      else {
-        df %>%
-          summarise(meanScore = mean(pctCorrect)) %>%
-          pivot_wider(names_from = testLable, values_from = meanScore) %>%
-          arrange(Grade) -> df2
-
-        if (c(5, 8, 10) %in% df2$Grade) {
-          df2 %>%
-            select(
-              "Grade",
-              "KID", "CS", "IKI",
-              "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
-              "LS", "PS", "ES",
-              "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
-            ) -> meanSubScores
-        } else {
-          df2 %>%
-            select(
-              "Grade",
-              "KID", "CS", "IKI",
-              "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
-              "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
-            ) -> meanSubScores
-        }
-
-
-        return(meanSubScores)
-      }
-    } else {
-      sdf <- StudentData()
-
-      TidyData() %>%
-        left_join(sdf) %>%
-        group_by(testLable, Grade) %>%
-        summarise(meanScore = mean(pctCorrect)) %>%
-        pivot_wider(names_from = testLable, values_from = meanScore) %>%
-        arrange(Grade) %>%
-        select(
-          "Grade",
-          "KID", "CS", "IKI",
-          "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
-          "LS", "PS", "ES",
-          "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
-        ) -> meanSubScores
-
-      return(meanSubScores)
+    # if no students return Nothing
+    if (length(df) < 1) {
+      return(NULL)
     }
+    df %>%
+      summarise(meanScore = mean(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = meanScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        "KID", "CS", "IKI",
+        "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
+        "LS", "PS", "ES",
+        "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
+      ) -> meanSubScores
+
+    return(meanSubScores)
+
   })
 
   #### Median Score for subtests by grade ####
@@ -451,7 +435,47 @@ shinyServer(function(input, output) {
   })
 
 
+  #### Join Tidy Data with Student data ####
+  TidyDataWithDemos <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+    sdf <- StudentData()
 
+    TidyData() %>%
+      left_join(sdf) %>%
+      group_by(testLable, Grade)-> dfJoined
+
+    return(dfJoined)
+  })
+
+  #### Filtered Data ####
+  FilteredData <- reactive({
+
+
+    selected_races <- input$demos
+    selected_programs <- input$programs
+
+    if (filterDemo() == T & filterPrograms() == T) {
+      TidyDataWithDemos() %>%
+        filter_at(selected_races, any_vars(. != 0)) %>%
+        filter_at(selected_programs, any_vars(. != 0)) -> df
+    }
+    else if(filterDemo() == T){
+      TidyDataWithDemos() %>%
+        filter_at(selected_races, any_vars(. != 0)) -> df
+    }
+    else if(filterPrograms() == T){
+      TidyDataWithDemos() %>%
+        filter_at(selected_programs, any_vars(. != 0)) -> df
+    }
+    else{
+      TidyDataWithDemos() -> df
+    }
+
+    return(df)
+
+  })
 
   ##### UI OPTIONS #####
 

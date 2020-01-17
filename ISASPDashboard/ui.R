@@ -66,8 +66,8 @@ shinyUI(
         ),
         tabItem(tabName = "dashboard",
           fluidPage(
-            width=24,
-            tabBox(
+
+            tabBox(width=9,
               title = "Sub Scores",
               tabPanel(
                 id = "tabReading",

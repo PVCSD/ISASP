@@ -321,107 +321,28 @@ shinyServer(function(input, output) {
     if (fileReady() == F) {
       return(NULL)
     }
-    if (filterDemo() == T & filterPrograms() == T) {
-      sdf <- StudentData()
+    sdf <- StudentData()
 
-      selected_races <- input$demos
-      selected_programs <- input$programs
+    df <- FilteredData()
 
-      TidyData() %>%
-        left_join(sdf) %>%
-        group_by(testLable, Grade) %>%
-        filter_at(selected_races, any_vars(. != 0)) %>%
-        filter_at(selected_programs, any_vars(. != 0)) -> df
-
-      # if no students return Nothing
-      if (length(df) < 1) {
-        return(NULL)
-      }
-
-      df %>%
-        summarise(medianScore = median(pctCorrect)) %>%
-        pivot_wider(names_from = testLable, values_from = medianScore) %>%
-        arrange(Grade) %>%
-        select(
-          "Grade",
-          "KID", "CS", "IKI",
-          "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
-          "LS", "PS", "ES",
-          "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
-        ) -> medianSubScores2
-
-      return(medianSubScores2)
-    } else if (filterDemo() == T) {
-      sdf <- StudentData()
-      selected_races <- input$demos
-
-      TidyData() %>%
-        left_join(sdf) %>%
-        group_by(testLable, Grade) %>%
-        filter_at(selected_races, any_vars(. != 0)) %>%
-        filter_at(selected_programs, any_vars(. != 0)) -> df
-
-      # if no students return Nothing
-      if (length(df) < 1) {
-        return(NULL)
-      }
-
-
-      df %>%
-        summarise(medianScore = median(pctCorrect)) %>%
-        pivot_wider(names_from = testLable, values_from = medianScore) %>%
-        arrange(Grade) %>%
-        select(
-          "Grade",
-          "KID", "CS", "IKI",
-          "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
-          "LS", "PS", "ES",
-          "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
-        ) -> medianSubScores2
-
-      return(medianSubScores2)
-    } else if (filterPrograms() == T) {
-      sdf <- StudentData()
-      selected_programs <- input$programs
-
-      TidyData() %>%
-        left_join(sdf) %>%
-        group_by(testLable, Grade) %>%
-        filter_at(selected_programs, any_vars(. != 0)) -> df
-
-      # if no students return Nothing
-      if (length(df) < 1) {
-        return(NULL)
-      }
-
-
-      df %>%
-        summarise(medianScore = median(pctCorrect)) %>%
-        pivot_wider(names_from = testLable, values_from = medianScore) %>%
-        arrange(Grade) %>%
-        select(
-          "Grade",
-          "KID", "CS", "IKI",
-          "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
-          "LS", "PS", "ES",
-          "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
-        ) -> medianSubScores2
-      return(medianSubScores2)
-    } else {
-      TidyData() %>%
-        group_by(testLable, Grade) %>%
-        summarise(medianScore = median(pctCorrect)) %>%
-        pivot_wider(names_from = testLable, values_from = medianScore) %>%
-        arrange(Grade) %>%
-        select(
-          Grade,
-          KID, CS, IKI,
-          RPK, PDW, TTP, `COSE-KOL`, VAU,
-          LS, PS, ES,
-          OA, NBT, NF, MD, G, RP, NS, EE, SP, `F`, S, A, N
-        ) -> medianSubScores
-      return(medianSubScores)
+    # if no students return Nothing
+    if (length(df) < 1) {
+      return(NULL)
     }
+    df %>%
+      summarise(meanScore = median(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = meanScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        "KID", "CS", "IKI",
+        "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
+        "LS", "PS", "ES",
+        "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
+      ) -> meanSubScores
+
+    return(meanSubScores)
+
   })
 
 

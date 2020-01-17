@@ -13,41 +13,12 @@ shinyUI(
     ## Sidebar with controls
     dashboardSidebar(
       sidebarMenu(
-        menuItem("Upload", tabName = "upload", icon = icon("Upload")),
-        menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard"))
-      ),
-
-      selectInput(
-        "tableType",
-        label = "Table Type",
-        choices = c(
-          "Number of Questions",
-          "Mean Scores",
-          "Median Scores"
-        )
-      ),
-
-      h4("Filter By Demo"),
-      selectizeInput("demos",
-        label = "Race",
-        choices = c(
-          "American Indian or Alaskan"="AmericanIndianorAlaskan",
-          "Asian"="Asian", "African American"="AfricanAmerican",
-          "Hispanic"="HispanicLatino", "Hawaiian / Pacific Islander"="HawaiianPacificIslander",
-          "white"="White"
-        ), multiple = T
-
-      ),
-
-      selectizeInput("programs",
-        label = "Group",
-        choices = c(
-          "Military Connected" = "MilitaryConnected", "Special Ed" = "SE",
-          "504 Plan"="plan504","Free/Reduced Lunch" ="FRL",
-          "GT" = "GT", "ELL" = "ELL", "T1L" =  "T1L",
-          "T1M"= "T1M", "Homeless" = "Homeless"
-        ), multiple=T
+        menuItem("Upload", tabName = "upload", icon = icon("upload")),
+        menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
+        menuItem("Honors Science", tabName = "cutoffs", icon = icon("flask"))
       )
+
+
     ),
     dashboardBody(
       tabItems(
@@ -66,6 +37,40 @@ shinyUI(
         ),
         tabItem(tabName = "dashboard",
           fluidPage(
+            box("Controls", width = 3,
+                selectInput(
+                  "tableType",
+                  label = "Table Type",
+                  choices = c(
+                    "Number of Questions",
+                    "Mean Scores",
+                    "Median Scores"
+                  )
+                ),
+
+                h4("Filter By Demo"),
+                selectizeInput("demos",
+                               label = "Race",
+                               choices = c(
+                                 "American Indian or Alaskan"="AmericanIndianorAlaskan",
+                                 "Asian"="Asian", "African American"="AfricanAmerican",
+                                 "Hispanic"="HispanicLatino", "Hawaiian / Pacific Islander"="HawaiianPacificIslander",
+                                 "white"="White"
+                               ), multiple = T
+
+                ),
+
+                selectizeInput("programs",
+                               label = "Group",
+                               choices = c(
+                                 "Military Connected" = "MilitaryConnected", "Special Ed" = "SE",
+                                 "504 Plan"="plan504","Free/Reduced Lunch" ="FRL",
+                                 "GT" = "GT", "ELL" = "ELL", "T1L" =  "T1L",
+                                 "T1M"= "T1M", "Homeless" = "Homeless"
+                               ), multiple=T
+                )
+
+            ),
 
             tabBox(width=9,
               title = "Sub Scores",

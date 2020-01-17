@@ -12,14 +12,11 @@ shinyUI(
 
     ## Sidebar with controls
     dashboardSidebar(
-      fileInput("file1", "Upload the ISASP Data File",
-        multiple = TRUE,
-        accept = c(
-          "text/csv",
-          "text/comma-separated-values,text/plain",
-          ".txt"
-        )
+      sidebarMenu(
+        menuItem("Upload", tabName = "upload", icon = icon("Upload")),
+        menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard"))
       ),
+
       selectInput(
         "tableType",
         label = "Table Type",
@@ -53,7 +50,31 @@ shinyUI(
       )
     ),
     dashboardBody(
-      uiOutput("tableOutput")
+      tabItems(
+        tabItem(tabName = "upload",
+                fluidRow(
+                  fileInput("file1", "Upload the ISASP Data File",
+                            multiple = TRUE,
+                            accept = c(
+                              "text/csv",
+                              "text/comma-separated-values,text/plain",
+                              ".txt"
+                            )
+                  ),
+                )
+
+        ),
+        tabItem(tabName = "dashboard",
+          fluidRow(
+            box(
+              title = "Table",
+              uiOutput("tableOutput")
+            )
+          )
+        )
+      )
+
+
     ),
     title = "ISASP Dashboard"
   )

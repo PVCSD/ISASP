@@ -136,3 +136,25 @@ tidySubTests <- rbind(tidyReadingScores, tidyLWScores, tidyMathScores, tidySciSc
 return(tidySubTests)
 
 }
+
+
+get_student_demo <- function(df){
+  df %>%
+    select(DistrictName, LastName, FirstName, Gender, StateID, DistrictID, Grade,
+           AmericanIndianorAlaskan, Asian, AfricanAmerican, HispanicLatino, HawaiianPacificIslander,
+           White, MilitaryConnected, SE,
+           "plan504" = `504.0`, FRL, GT, ELL, T1L, T1M, Homeless
+    ) -> studentDemo
+
+  return(studentDemo)
+
+}
+
+
+get_domain_scores <- function(df){
+  df %>%
+    select(StateID, Grade, ELAScaleScore, ReadScaleScore,
+           LWScaleScore, MathScaleScore, SciScaleScore) -> scaleScores
+  return(scaleScores)
+}
+

@@ -66,3 +66,22 @@ scale %>%
          MathScaleScore, MathPercentile,
          SciScaleScore, SciPercentile)-> percentiles
 
+
+library(ggplot2)
+
+
+percentiles %>%
+  ggplot(aes(x=ELAPercentile))+
+  geom_histogram(fill="#d6d6d6")
+percentiles %>%
+  ggplot(aes(x=ReadPercentile))+
+  geom_histogram(fill="#d6d6d6")
+percentiles %>%
+  ggplot(aes(x=LWAPercentile))+
+  geom_histogram(fill="#d6d6d6")
+percentiles %>%
+  ggplot(aes(x=MathPercentile))+
+  geom_density(fill="#d6d6d6")
+percentiles %>%
+  ggplot(aes(x=SciPercentile))+
+  geom_density(fill="#d6d6d6")

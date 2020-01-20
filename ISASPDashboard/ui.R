@@ -105,6 +105,23 @@ shinyUI(
               )
             )
           )
+        ),
+        tabItem(
+          tabName = "cutoffs",
+          fluidPage(
+            box(
+              width = 3,
+              title = "Controls",
+              radioButtons("cuttoffGrade", "Grade", choices=c("7", "8")),
+              textInput("minELAPercentile", "Min ELA Percentile", value="90"),
+              textInput("minMathPercentile", "Min Math Percentile", value="90")
+
+            ),
+            box(
+              width = 9,
+              dataTableOutput("honorsScience")
+            )
+          )
         )
       )
     ),

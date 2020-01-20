@@ -5,6 +5,7 @@ library(dplyr)
 library(ggplot2)
 library(DT)
 library(shinydashboard)
+library(readr)
 
 shinyServer(function(input, output) {
 
@@ -20,6 +21,19 @@ shinyServer(function(input, output) {
     }
 
     df <- read_excel(infile$datapath)
+    return(df)
+  })
+
+
+  ## read in the data
+  percentiledf <- reactive({
+    infile <- input$file2
+    if (is.null(infile)) {
+      # User has not uploaded a file yet
+      return(NULL)
+    }
+
+    df <- read_csv(infile$datapath)
     return(df)
   })
 
@@ -187,7 +201,6 @@ shinyServer(function(input, output) {
 
 
   #### Number of Questions  By Grade ####
-
 
   ###### Number of Questions: Reading ######
   NumQuestionsReading <- reactive({
@@ -469,6 +482,24 @@ shinyServer(function(input, output) {
       ) -> medianSubScores
 
     return(medianSubScores)
+  })
+
+  PotentialHonorsSci <- reactive({
+
+
+    StudentData() %>%
+      left_join(percentiledf())%>%
+      filter(Grade==input$cuttoffGrade) %>%
+      filter(MathPercentile >= input$minMathPercentile,
+             ELAPercentile >= input$minELAPercentile) %>%
+      select(StateID, FirstName, LastName, MathScaleScore, MathPercentile, ELAScaleScore, ELAPercentile)
+  })
+
+  output$honorsScience <- renderDataTable({
+
+    datatable(PotentialHonorsSci())
+
+
   })
 
 

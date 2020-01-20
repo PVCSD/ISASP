@@ -490,7 +490,7 @@ shinyServer(function(input, output) {
     StudentData() %>%
       left_join(percentiledf())%>%
       filter(Grade==input$cuttoffGrade) %>%
-      filter(MathPercentile >= input$minMathPercentile,
+      filter(MathPercentile >= input$minMathPercentile |
              ELAPercentile >= input$minELAPercentile) %>%
       select(StateID, FirstName, LastName, MathScaleScore, MathPercentile, ELAScaleScore, ELAPercentile)
   })

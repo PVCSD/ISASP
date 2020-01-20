@@ -31,6 +31,15 @@ shinyUI(
                 "text/comma-separated-values,text/plain",
                 ".txt"
               )
+            ),
+
+            fileInput("file2", "Upload the Percentiles",
+                      multiple = TRUE,
+                      accept = c(
+                        "text/csv",
+                        "text/comma-separated-values,text/plain",
+                        ".txt"
+                      )
             )
           )
         ),

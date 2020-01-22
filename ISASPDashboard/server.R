@@ -8,6 +8,13 @@ library(shinydashboard)
 library(readr)
 
 shinyServer(function(input, output) {
+  grades_possible <- function(df) {
+    df %>%
+      select(Grade) %>%
+      distinct() -> values
+
+    return(values)
+  }
 
 
   ##### Data Operations #####
@@ -41,7 +48,7 @@ shinyServer(function(input, output) {
   StudentData <- reactive({
     df <- filedata()
     df %>%
-      select(DistrictName, LastName, FirstName, Gender, StateID, DistrictID, Grade,
+      select(DistrictName, SchoolName, LastName, FirstName, Gender, StateID, DistrictID, Grade,
         AmericanIndianorAlaskan, Asian, AfricanAmerican, HispanicLatino, HawaiianPacificIslander,
         White, MilitaryConnected, SE,
         "plan504" = `504.0`, FRL, GT, ELL, T1L, T1M, Homeless
@@ -271,7 +278,6 @@ shinyServer(function(input, output) {
     return(questions)
   })
 
-
   ###### Number of Questions: ALL ######
   NumQuestions <- reactive({
     if (fileReady() == F) {
@@ -363,7 +369,6 @@ shinyServer(function(input, output) {
     return(meanSubScores)
   })
 
-
   ###### Mean Score: Science ######
   MeanSubTestScoresScience <- reactive({
     if (fileReady() == F) {
@@ -388,6 +393,8 @@ shinyServer(function(input, output) {
     return(meanSubScores)
   })
 
+
+
   #### Median Score for subtests by grade ####
 
   ###### Median Score: Reading ######
@@ -409,7 +416,6 @@ shinyServer(function(input, output) {
 
     return(medianSubScores)
   })
-
   ###### median Score: Language/Writing ######
   MedianSubTestScoresLW <- reactive({
     if (fileReady() == F) {
@@ -434,7 +440,6 @@ shinyServer(function(input, output) {
 
     return(medianSubScores)
   })
-
   ###### median Score: Math ######
   MedianSubTestScoresMath <- reactive({
     if (fileReady() == F) {
@@ -458,8 +463,6 @@ shinyServer(function(input, output) {
 
     return(medianSubScores)
   })
-
-
   ###### median Score: Science ######
   MedianSubTestScoresScience <- reactive({
     if (fileReady() == F) {
@@ -489,21 +492,16 @@ shinyServer(function(input, output) {
 
   ######### Reporting / Cuttofs?
   PotentialHonorsSci <- reactive({
-
-
     StudentData() %>%
-      left_join(percentiledf())%>%
-      filter(Grade==input$cuttoffGrade) %>%
+      left_join(percentiledf()) %>%
+      filter(Grade == input$cuttoffGrade) %>%
       filter(MathPercentile >= input$minMathPercentile |
-             ELAPercentile >= input$minELAPercentile) %>%
+        ELAPercentile >= input$minELAPercentile) %>%
       select(StateID, FirstName, LastName, MathScaleScore, MathPercentile, ELAScaleScore, ELAPercentile)
   })
 
   output$honorsScience <- renderDataTable({
-
     datatable(PotentialHonorsSci())
-
-
   })
 
 
@@ -561,35 +559,46 @@ shinyServer(function(input, output) {
 
   #### Filtered Data ####
   FilteredData <- reactive({
-
     df <- ProgramsFilter()
 
     return(df)
   })
 
-  ### Filter By Gender
-  GenderFilter <- reactive({
-
-    if(CheckFilterGender()==T){
-      selected_gender <- input$gender
+  ### Filter By Building
+  BuildingFilter <- reactive({
+    if (CheckFilterBuildings() == T) {
+      selected_buildings <- input$buildingSelect
       df <- TidyDataWithDemos() %>%
-        filter(Gender %in% selected_gender)
+        filter(SchoolName %in% selected_buildings)
     }
-    else{
+    else {
       df <- TidyDataWithDemos()
     }
 
     return(df)
   })
 
-  DemoFilter <- reactive({
+  ### Filter By Gender
+  GenderFilter <- reactive({
+    if (CheckFilterGender() == T) {
+      selected_gender <- input$gender
+      df <- BuildingFilter() %>%
+        filter(Gender %in% selected_gender)
+    }
+    else {
+      df <- BuildingFilter()
+    }
 
-    if(CheckFilterDemos()==T){
+    return(df)
+  })
+
+  DemoFilter <- reactive({
+    if (CheckFilterDemos() == T) {
       selected_races <- input$demos
       df <- GenderFilter() %>%
         filter_at(selected_races, any_vars(. != 0))
     }
-    else{
+    else {
       df <- GenderFilter()
     }
 
@@ -597,18 +606,19 @@ shinyServer(function(input, output) {
   })
 
   ProgramsFilter <- reactive({
-
-    if(CheckFilterPrograms()==T){
+    if (CheckFilterPrograms() == T) {
       selected_programs <- input$programs
       df <- DemoFilter() %>%
         filter_at(selected_programs, any_vars(. != 0))
     }
-    else{
+    else {
       df <- DemoFilter()
     }
 
     return(df)
   })
+
+
 
   ##### UI OPTIONS #####
 
@@ -897,9 +907,10 @@ shinyServer(function(input, output) {
 
     }
     else {
-      selectInput("buildingSelect",
+      selectizeInput("buildingSelect",
         label = "Filter By Building",
-        choices = c("All", SchoolList())
+        choices = c(SchoolList()),
+        multiple = T
       )
     }
   })
@@ -950,6 +961,14 @@ shinyServer(function(input, output) {
 
   CheckFilterGender <- reactive({
     if (length(input$gender) > 0) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+  })
+
+  CheckFilterBuildings <- reactive({
+    if (length(input$buildingSelect) > 0) {
       return(TRUE)
     } else {
       return(FALSE)

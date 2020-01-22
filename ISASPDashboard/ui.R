@@ -34,12 +34,12 @@ shinyUI(
             ),
 
             fileInput("file2", "Upload the Percentiles",
-                      multiple = TRUE,
-                      accept = c(
-                        "text/csv",
-                        "text/comma-separated-values,text/plain",
-                        ".txt"
-                      )
+              multiple = TRUE,
+              accept = c(
+                "text/csv",
+                "text/comma-separated-values,text/plain",
+                ".txt"
+              )
             )
           )
         ),
@@ -57,13 +57,15 @@ shinyUI(
                   "Median Scores"
                 )
               ),
+              h4("Filter By School"),
+              uiOutput("buildingFilter"),
               h4("Filter By Gender"),
               selectizeInput("gender",
-                             label = "Choose Gender",
-                             choices = c(
-                               "Female" = "F",
-                               "Male" = "M"
-                             ), multiple = T
+                label = "Choose Gender",
+                choices = c(
+                  "Female" = "F",
+                  "Male" = "M"
+                ), multiple = T
               ),
 
               h4("Filter By Demo"),
@@ -120,10 +122,9 @@ shinyUI(
             box(
               width = 3,
               title = "Controls",
-              radioButtons("cuttoffGrade", "Grade", choices=c("7", "8")),
-              numericInput("minELAPercentile", "Min ELA Percentile", value="90"),
-              numericInput("minMathPercentile", "Min Math Percentile", value="90")
-
+              radioButtons("cuttoffGrade", "Grade", choices = c("7", "8")),
+              numericInput("minELAPercentile", "Min ELA Percentile", value = "90"),
+              numericInput("minMathPercentile", "Min Math Percentile", value = "90")
             ),
             box(
               width = 9,

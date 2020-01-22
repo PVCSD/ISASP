@@ -57,6 +57,14 @@ shinyUI(
                   "Median Scores"
                 )
               ),
+              h4("Filter By Gender"),
+              selectizeInput("gender",
+                             label = "Choose Gender",
+                             choices = c(
+                               "Female" = "F",
+                               "Male" = "M"
+                             ), multiple = T
+              ),
 
               h4("Filter By Demo"),
               selectizeInput("demos",

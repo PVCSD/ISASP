@@ -484,6 +484,10 @@ shinyServer(function(input, output) {
     return(medianSubScores)
   })
 
+
+
+
+  ######### Reporting / Cuttofs?
   PotentialHonorsSci <- reactive({
 
 
@@ -560,21 +564,38 @@ shinyServer(function(input, output) {
     selected_races <- input$demos
     selected_programs <- input$programs
 
+    dataFiltered <- GenderFilter()
+
     if (filterDemo() == T & filterPrograms() == T) {
-      TidyDataWithDemos() %>%
+      dataFiltered %>%
         filter_at(selected_races, any_vars(. != 0)) %>%
         filter_at(selected_programs, any_vars(. != 0)) -> df
     }
     else if (filterDemo() == T) {
-      TidyDataWithDemos() %>%
+      dataFiltered %>%
         filter_at(selected_races, any_vars(. != 0)) -> df
     }
     else if (filterPrograms() == T) {
-      TidyDataWithDemos() %>%
+      dataFiltered %>%
         filter_at(selected_programs, any_vars(. != 0)) -> df
     }
     else {
       TidyDataWithDemos() -> df
+    }
+
+    return(df)
+  })
+
+
+  GenderFilter <- reactive({
+
+    if(CheckFilterGender()==T){
+      selected_gender <- input$gender
+      df <- TidyDataWithDemos() %>%
+        filter(Gender %in% selected_gender)
+    }
+    else{
+      df <- TidyDataWithDemos()
     }
 
     return(df)
@@ -912,6 +933,14 @@ shinyServer(function(input, output) {
   # programs selected?
   filterPrograms <- reactive({
     if (length(input$programs) > 0) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+  })
+
+  CheckFilterGender <- reactive({
+    if (length(input$gender) > 0) {
       return(TRUE)
     } else {
       return(FALSE)

@@ -561,32 +561,13 @@ shinyServer(function(input, output) {
 
   #### Filtered Data ####
   FilteredData <- reactive({
-    selected_races <- input$demos
-    selected_programs <- input$programs
 
-    dataFiltered <- GenderFilter()
-
-    if (filterDemo() == T & filterPrograms() == T) {
-      dataFiltered %>%
-        filter_at(selected_races, any_vars(. != 0)) %>%
-        filter_at(selected_programs, any_vars(. != 0)) -> df
-    }
-    else if (filterDemo() == T) {
-      dataFiltered %>%
-        filter_at(selected_races, any_vars(. != 0)) -> df
-    }
-    else if (filterPrograms() == T) {
-      dataFiltered %>%
-        filter_at(selected_programs, any_vars(. != 0)) -> df
-    }
-    else {
-      TidyDataWithDemos() -> df
-    }
+    df <- ProgramsFilter()
 
     return(df)
   })
 
-
+  ### Filter By Gender
   GenderFilter <- reactive({
 
     if(CheckFilterGender()==T){
@@ -596,6 +577,34 @@ shinyServer(function(input, output) {
     }
     else{
       df <- TidyDataWithDemos()
+    }
+
+    return(df)
+  })
+
+  DemoFilter <- reactive({
+
+    if(CheckFilterDemos()==T){
+      selected_races <- input$demos
+      df <- GenderFilter() %>%
+        filter_at(selected_races, any_vars(. != 0))
+    }
+    else{
+      df <- GenderFilter()
+    }
+
+    return(df)
+  })
+
+  ProgramsFilter <- reactive({
+
+    if(CheckFilterPrograms()==T){
+      selected_programs <- input$programs
+      df <- DemoFilter() %>%
+        filter_at(selected_programs, any_vars(. != 0))
+    }
+    else{
+      df <- DemoFilter()
     }
 
     return(df)
@@ -922,7 +931,7 @@ shinyServer(function(input, output) {
 
 
   # check if a demographic has been selected
-  filterDemo <- reactive({
+  CheckFilterDemos <- reactive({
     if (length(input$demos) > 0) {
       return(TRUE)
     } else {
@@ -931,7 +940,7 @@ shinyServer(function(input, output) {
   })
 
   # programs selected?
-  filterPrograms <- reactive({
+  CheckFilterPrograms <- reactive({
     if (length(input$programs) > 0) {
       return(TRUE)
     } else {

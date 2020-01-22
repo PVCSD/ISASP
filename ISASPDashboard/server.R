@@ -199,10 +199,7 @@ shinyServer(function(input, output) {
     #### Bind them All together ####
     tidySubTests <- rbind(tidyReadingScores, tidyLWScores, tidyMathScores, tidySciScores)
 
-
-
-
-    #### data out ####
+    ### data out ###
     return(tidySubTests)
   })
 
@@ -357,6 +354,33 @@ shinyServer(function(input, output) {
     if (length(df) < 1) {
       return(NULL)
     }
+
+    listOfGrades <- grades_possible(df)
+
+    # columnsToSelect <- c("Grade")
+    #
+    # if(3 %in% listOfGrades | 4 %in% listOfGrades | 5  %in% listOfGrades){
+    # columnsToSelect <-  c(columnsToSelect,"OA", "NBT", "NF", "MD", "G")
+    # }
+    # if(6 %in% listOfGrades | 7 %in% listOfGrades){
+    #   columnsToSelect <-c(columnsToSelect, "G", "RP", "NS", "EE", "SP")
+    # }
+    # if(8 %in% listOfGrades ){
+    #   columnsToSelect <-c(columnsToSelect, "G", "NS", "EE", "SP", "SP")
+    # }
+    #
+    # if(3 %in% listOfGrades | 4 %in% listOfGrades | 5  %in% listOfGrades){
+    #   columnsToSelect <-  c(columnsToSelect, "G", "F", "S", "A", "N")
+    # }
+    #
+    #
+    # columnDF <- data.frame(columnsToSelect) %>%
+    #   distinct()
+    #
+    # columns <- as.character(columnDF$columnsToSelect)
+
+
+
     df %>%
       summarise(meanScore = mean(pctCorrect)) %>%
       pivot_wider(names_from = testLable, values_from = meanScore) %>%

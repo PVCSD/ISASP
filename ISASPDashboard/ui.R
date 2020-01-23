@@ -57,9 +57,7 @@ shinyUI(
                   "Median Scores"
                 )
               ),
-              h4("Filter By School"),
               uiOutput("buildingFilter"),
-              h4("Filter By Gender"),
               selectizeInput("gender",
                 label = "Choose Gender",
                 choices = c(
@@ -68,9 +66,8 @@ shinyUI(
                 ), multiple = T
               ),
 
-              h4("Filter By Demo"),
               selectizeInput("demos",
-                label = "Race",
+                label = "Filter By Race",
                 choices = c(
                   "American Indian or Alaskan" = "AmericanIndianorAlaskan",
                   "Asian" = "Asian", "African American" = "AfricanAmerican",
@@ -80,7 +77,7 @@ shinyUI(
               ),
 
               selectizeInput("programs",
-                label = "Group",
+                label = "Filter By Group",
                 choices = c(
                   "Military Connected" = "MilitaryConnected", "Special Ed" = "SE",
                   "504 Plan" = "plan504", "Free/Reduced Lunch" = "FRL",

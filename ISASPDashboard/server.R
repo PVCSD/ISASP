@@ -7,6 +7,15 @@ library(DT)
 library(shinydashboard)
 library(readr)
 
+
+emptydfMath <- data.frame(Grade=c(3,4,5,6,7,8,9,10,11),
+                          "OA"=rep(NA, 9), "NBT"=rep(NA, 9),
+                          "NF"=rep(NA, 9), "MD"=rep(NA, 9),
+                          "G"=rep(NA, 9), "RP"=rep(NA, 9),
+                          "NS"=rep(NA, 9), "EE"=rep(NA, 9),
+                          "SP"=rep(NA, 9), "F"=rep(NA, 9),
+                          "S"=rep(NA, 9), "A"=rep(NA, 9), "N"=rep(NA, 9))
+
 shinyServer(function(input, output) {
   grades_possible <- function(df) {
     df %>%
@@ -311,7 +320,7 @@ shinyServer(function(input, output) {
       arrange(Grade) %>%
       select(
         "Grade",
-        "KID", "CS", "IKI"
+        one_of("KID", "CS", "IKI")
       ) -> meanSubScores
 
     return(meanSubScores)
@@ -336,7 +345,7 @@ shinyServer(function(input, output) {
       arrange(Grade) %>%
       select(
         "Grade",
-        "RPK", "PDW", "TTP", "COSE-KOL", "VAU"
+        one_of( "RPK", "PDW", "TTP", "COSE-KOL", "VAU")
       ) -> meanSubScores
 
     return(meanSubScores)
@@ -354,40 +363,13 @@ shinyServer(function(input, output) {
     if (length(df) < 1) {
       return(NULL)
     }
-
-    listOfGrades <- grades_possible(df)
-
-    # columnsToSelect <- c("Grade")
-    #
-    # if(3 %in% listOfGrades | 4 %in% listOfGrades | 5  %in% listOfGrades){
-    # columnsToSelect <-  c(columnsToSelect,"OA", "NBT", "NF", "MD", "G")
-    # }
-    # if(6 %in% listOfGrades | 7 %in% listOfGrades){
-    #   columnsToSelect <-c(columnsToSelect, "G", "RP", "NS", "EE", "SP")
-    # }
-    # if(8 %in% listOfGrades ){
-    #   columnsToSelect <-c(columnsToSelect, "G", "NS", "EE", "SP", "SP")
-    # }
-    #
-    # if(3 %in% listOfGrades | 4 %in% listOfGrades | 5  %in% listOfGrades){
-    #   columnsToSelect <-  c(columnsToSelect, "G", "F", "S", "A", "N")
-    # }
-    #
-    #
-    # columnDF <- data.frame(columnsToSelect) %>%
-    #   distinct()
-    #
-    # columns <- as.character(columnDF$columnsToSelect)
-
-
-
     df %>%
       summarise(meanScore = mean(pctCorrect)) %>%
       pivot_wider(names_from = testLable, values_from = meanScore) %>%
       arrange(Grade) %>%
       select(
         "Grade",
-        "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
+        one_of("OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N")
       ) -> meanSubScores
 
     return(meanSubScores)
@@ -411,7 +393,7 @@ shinyServer(function(input, output) {
       arrange(Grade) %>%
       select(
         "Grade",
-        "LS", "PS", "ES"
+        one_of("LS", "PS", "ES")
       ) -> meanSubScores
 
     return(meanSubScores)
@@ -435,7 +417,7 @@ shinyServer(function(input, output) {
       arrange(Grade) %>%
       select(
         "Grade",
-        "KID", "CS", "IKI"
+        one_of("KID", "CS", "IKI")
       ) -> medianSubScores
 
     return(medianSubScores)
@@ -459,7 +441,7 @@ shinyServer(function(input, output) {
       arrange(Grade) %>%
       select(
         "Grade",
-        "RPK", "PDW", "TTP", "COSE-KOL", "VAU"
+        one_of("RPK", "PDW", "TTP", "COSE-KOL", "VAU")
       ) -> medianSubScores
 
     return(medianSubScores)
@@ -482,7 +464,7 @@ shinyServer(function(input, output) {
       arrange(Grade) %>%
       select(
         "Grade",
-        "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
+        one_of("OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N")
       ) -> medianSubScores
 
     return(medianSubScores)
@@ -505,7 +487,7 @@ shinyServer(function(input, output) {
       arrange(Grade) %>%
       select(
         "Grade",
-        "LS", "PS", "ES"
+        one_of("LS", "PS", "ES")
       ) -> medianSubScores
 
     return(medianSubScores)

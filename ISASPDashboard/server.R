@@ -8,14 +8,6 @@ library(shinydashboard)
 library(readr)
 
 
-emptydfMath <- data.frame(Grade=c(3,4,5,6,7,8,9,10,11),
-                          "OA"=rep(NA, 9), "NBT"=rep(NA, 9),
-                          "NF"=rep(NA, 9), "MD"=rep(NA, 9),
-                          "G"=rep(NA, 9), "RP"=rep(NA, 9),
-                          "NS"=rep(NA, 9), "EE"=rep(NA, 9),
-                          "SP"=rep(NA, 9), "F"=rep(NA, 9),
-                          "S"=rep(NA, 9), "A"=rep(NA, 9), "N"=rep(NA, 9))
-
 shinyServer(function(input, output) {
   grades_possible <- function(df) {
     df %>%
@@ -63,6 +55,18 @@ shinyServer(function(input, output) {
         "plan504" = `504.0`, FRL, GT, ELL, T1L, T1M, Homeless
       ) -> studentDemo
     return(studentDemo)
+  })
+
+  #get Domain Scores
+  DomainScores <- reactive({
+    df <- filedata()
+    df %>%
+      select(StateID, Grade,
+             ELAAchLvl, ELAScaleScore,
+             ReadScaleScore, LWScaleScore,
+             MathAchLvl, MathScaleScore,
+             SciScaleScore) -> studenDomainScores
+    return(studenDomainScores)
   })
 
 

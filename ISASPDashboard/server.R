@@ -220,34 +220,47 @@ shinyServer(function(input, output) {
 
   #### Domain SCORES ####
 
-  output$countELAProficent <- renderInfoBox({
-    DomainScores() %>%
+  output$countELAProficent <- renderUI({
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores)%>%
       filter(ELAAchLvl %in% c("P")) %>%
       tally()->value1
 
-    infoBox("Number Proficient", value=value1, color = "yellow", width = 3)
+    infoBox("Number Proficient", value=value1, color = "yellow", width = 12)
 
 
 
   })
 
-  output$countELAAdvanced <- renderInfoBox({
-    DomainScores() %>%
+  output$countELAAdvanced <- renderUI({
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores)%>%
       filter(ELAAchLvl %in% c("A")) %>%
       tally()->value1
 
-    infoBox("Number Advanced", value=value1,  color = "olive", width = 3)
+    infoBox("Number Advanced", value=value1,  color = "olive", width = 12)
 
 
 
   })
 
-  output$countELAANotPro <- renderInfoBox({
-    DomainScores() %>%
+  output$countELAANotPro <- renderUI({
+
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores)%>%
       filter(ELAAchLvl %in% c("N")) %>%
       tally()->value1
 
-    infoBox("Number Advanced", value=value1,  color = "red", width = 3)
+    infoBox("Number Advanced", value=value1,  color = "red", width = 12)
 
 
 
@@ -265,13 +278,15 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <-DomainScores()
+    df <-FilteredData()
+    scores <- DomainScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
       return(NULL)
     }
     df %>%
+      left_join(scores)%>%
       group_by(Grade)%>%
       summarise("ELA" = mean(ELAScaleScore),
                 "Reading"=mean(ReadScaleScore),
@@ -292,13 +307,15 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <-DomainScores()
+    df <-FilteredData()
+    scores <- DomainScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
       return(NULL)
     }
     df %>%
+      left_join(scores)%>%
       group_by(Grade)%>%
       summarise("ELA" = median(ELAScaleScore),
                 "Reading"=median(ReadScaleScore),
@@ -366,6 +383,22 @@ shinyServer(function(input, output) {
 
 
   #### Subtests ####
+
+
+  ##### Subtests with Student Data #####
+  filteredSubScores <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+    sdf <- FilteredData()
+    subScores <- TidyData()
+
+    sdf %>%
+      left_join(subScores) %>%
+      group_by(testLable, Grade) -> dfJoined
+
+    return(dfJoined)
+  })
 
   ##### Number of Questions  By Grade #####
 
@@ -446,7 +479,7 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <- FilteredData()
+    df <- filteredSubScores()
 
     df %>%
       summarise(meanScore = mean(pctCorrect)) %>%
@@ -465,7 +498,7 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <- FilteredData()
+    df <- filteredSubScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
@@ -489,7 +522,7 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <- FilteredData()
+    df <- filteredSubScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
@@ -512,7 +545,7 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <- FilteredData()
+    df <- filteredSubScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
@@ -539,7 +572,7 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <- FilteredData()
+    df <- filteredSubScores()
 
     df %>%
       summarise(medianScore = median(pctCorrect)) %>%
@@ -558,7 +591,7 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <- FilteredData()
+    df <- filteredSubScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
@@ -582,7 +615,7 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <- FilteredData()
+    df <- filteredSubScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
@@ -605,7 +638,7 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <- FilteredData()
+    df <- filteredSubScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
@@ -658,9 +691,10 @@ shinyServer(function(input, output) {
       return(NULL)
     }
     sdf <- StudentData()
+    subScores <- TidyData()
 
-    TidyData() %>%
-      left_join(sdf) %>%
+    sdf %>%
+      left_join(subScores) %>%
       group_by(testLable, Grade) -> dfJoined
 
     return(dfJoined)
@@ -677,11 +711,11 @@ shinyServer(function(input, output) {
   BuildingFilter <- reactive({
     if (CheckFilterBuildings() == T) {
       selected_buildings <- input$buildingSelect
-      df <- TidyDataWithDemos() %>%
+      df <- StudentData() %>%
         filter(SchoolName %in% selected_buildings)
     }
     else {
-      df <- TidyDataWithDemos()
+      df <- StudentData()
     }
 
     return(df)

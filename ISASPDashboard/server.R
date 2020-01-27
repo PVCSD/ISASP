@@ -574,34 +574,6 @@ shinyServer(function(input, output) {
   })
 
 
-  MedianSubTestScores <- reactive({
-    if (fileReady() == F) {
-      return(NULL)
-    }
-    sdf <- StudentData()
-
-    df <- FilteredData()
-
-    # if no students return Nothing
-    if (length(df) < 1) {
-      return(NULL)
-    }
-    df %>%
-      summarise(meanScore = median(pctCorrect)) %>%
-      pivot_wider(names_from = testLable, values_from = meanScore) %>%
-      arrange(Grade) %>%
-      select(
-        "Grade",
-        "KID", "CS", "IKI",
-        "RPK", "PDW", "TTP", "COSE-KOL", "VAU",
-        "LS", "PS", "ES",
-        "OA", "NBT", "NF", "MD", "G", "RP", "NS", "EE", "SP", "F", "S", "A", "N"
-      ) -> meanSubScores
-
-    return(meanSubScores)
-  })
-
-
   #### Get list of schools ####
   SchoolList <- reactive({
     filedata() %>%

@@ -221,7 +221,11 @@ shinyServer(function(input, output) {
   #### Domain SCORES ####
 
   output$countELAProficent <- renderInfoBox({
-    DomainScores() %>%
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores)%>%
       filter(ELAAchLvl %in% c("P")) %>%
       tally()->value1
 
@@ -232,7 +236,11 @@ shinyServer(function(input, output) {
   })
 
   output$countELAAdvanced <- renderInfoBox({
-    DomainScores() %>%
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores)%>%
       filter(ELAAchLvl %in% c("A")) %>%
       tally()->value1
 
@@ -243,7 +251,12 @@ shinyServer(function(input, output) {
   })
 
   output$countELAANotPro <- renderInfoBox({
-    DomainScores() %>%
+
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores)%>%
       filter(ELAAchLvl %in% c("N")) %>%
       tally()->value1
 

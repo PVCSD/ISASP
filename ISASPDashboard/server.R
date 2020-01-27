@@ -220,9 +220,12 @@ shinyServer(function(input, output) {
 
   #### Domain SCORES ####
 
-  ##### Ranges #####
 
-  ##### Mean Domain Scores #####
+  ##### Data Operations #####
+
+  ###### Mean Domain Scores ######
+
+  ###### Mean Domain Scores ######
   MeanDomain <- reactive({
     if (fileReady() == F) {
       return(NULL)
@@ -246,7 +249,7 @@ shinyServer(function(input, output) {
     return(meanSubScores)
   })
 
-  ##### Median Domain Scores #####
+  ###### Median Domain Scores ######
   MedianDomain <- reactive({
     if (fileReady() == F) {
       return(NULL)
@@ -270,13 +273,18 @@ shinyServer(function(input, output) {
     return(medianSubScores)
   })
 
+  ##### UI Set Up #####
+
+  ###### Mean Domain Scores ######
 
 
 
 
 
 
-  #### Number of Questions  By Grade ####
+  #### Subtests ####
+
+  ##### Number of Questions  By Grade #####
 
   ###### Number of Questions: Reading ######
   NumQuestionsReading <- reactive({
@@ -347,28 +355,8 @@ shinyServer(function(input, output) {
     return(questions)
   })
 
-  ###### Number of Questions: ALL ######
-  NumQuestions <- reactive({
-    if (fileReady() == F) {
-      return(NULL)
-    }
-    TidyData() %>%
-      group_by(testLable, Grade) %>%
-      summarise(numberofpoints = mean(round(pointsPossible, 1))) %>%
-      pivot_wider(names_from = testLable, values_from = numberofpoints) %>%
-      arrange(Grade) %>%
-      select(
-        Grade,
-        KID, CS, IKI,
-        RPK, PDW, TTP, `COSE-KOL`, VAU,
-        LS, PS, ES,
-        OA, NBT, NF, MD, G, RP, NS, EE, SP, `F`, S, A, N
-      ) -> questions
-    return(questions)
-  })
-
-
   #### Mean Score for subtests by grade ####
+
   ###### Mean Score: Reading ######
   MeanSubTestScoresReading <- reactive({
     if (fileReady() == F) {
@@ -463,7 +451,6 @@ shinyServer(function(input, output) {
   })
 
 
-
   #### Median Score for subtests by grade ####
 
   ###### Median Score: Reading ######
@@ -555,9 +542,6 @@ shinyServer(function(input, output) {
 
     return(medianSubScores)
   })
-
-
-
 
   ######### Reporting / Cuttofs?
   PotentialHonorsSci <- reactive({

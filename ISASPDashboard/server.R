@@ -220,7 +220,7 @@ shinyServer(function(input, output) {
 
   #### Domain SCORES ####
 
-  output$countELAProficent <- renderInfoBox({
+  output$countELAProficent <- renderUI({
     dfDomainScores <- DomainScores()
 
 
@@ -229,13 +229,13 @@ shinyServer(function(input, output) {
       filter(ELAAchLvl %in% c("P")) %>%
       tally()->value1
 
-    infoBox("Number Proficient", value=value1, color = "yellow", width = 3)
+    infoBox("Number Proficient", value=value1, color = "yellow", width = 12)
 
 
 
   })
 
-  output$countELAAdvanced <- renderInfoBox({
+  output$countELAAdvanced <- renderUI({
     dfDomainScores <- DomainScores()
 
 
@@ -244,13 +244,13 @@ shinyServer(function(input, output) {
       filter(ELAAchLvl %in% c("A")) %>%
       tally()->value1
 
-    infoBox("Number Advanced", value=value1,  color = "olive", width = 3)
+    infoBox("Number Advanced", value=value1,  color = "olive", width = 12)
 
 
 
   })
 
-  output$countELAANotPro <- renderInfoBox({
+  output$countELAANotPro <- renderUI({
 
     dfDomainScores <- DomainScores()
 
@@ -260,7 +260,7 @@ shinyServer(function(input, output) {
       filter(ELAAchLvl %in% c("N")) %>%
       tally()->value1
 
-    infoBox("Number Advanced", value=value1,  color = "red", width = 3)
+    infoBox("Number Advanced", value=value1,  color = "red", width = 12)
 
 
 
@@ -278,13 +278,15 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <-DomainScores()
+    df <-FilteredData()
+    scores <- DomainScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
       return(NULL)
     }
     df %>%
+      left_join(scores)%>%
       group_by(Grade)%>%
       summarise("ELA" = mean(ELAScaleScore),
                 "Reading"=mean(ReadScaleScore),
@@ -305,13 +307,15 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <-DomainScores()
+    df <-FilteredData()
+    scores <- DomainScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
       return(NULL)
     }
     df %>%
+      left_join(scores)%>%
       group_by(Grade)%>%
       summarise("ELA" = median(ELAScaleScore),
                 "Reading"=median(ReadScaleScore),

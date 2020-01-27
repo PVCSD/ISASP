@@ -116,10 +116,12 @@ shinyUI(
                 uiOutput("tableOutputDomain")
               )
             ),
+            column(width=3,
+                   uiOutput("countELAAdvanced"),
+                   uiOutput("countELAProficent"),
+                   uiOutput("countELAANotPro"))
 
-            infoBoxOutput("countELAAdvanced"),
-            infoBoxOutput("countELAProficent"),
-            infoBoxOutput("countELAANotPro")
+
 
           )
         ),

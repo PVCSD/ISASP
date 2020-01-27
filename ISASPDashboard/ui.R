@@ -113,9 +113,14 @@ shinyUI(
               tabPanel(
                 id = "tabDomainScores",
                 title = "Domain",
-                #uiOutput("tableOutputMath")
+                uiOutput("tableOutputDomain")
               )
-            )
+            ),
+
+            infoBoxOutput("countELAAdvanced"),
+            infoBoxOutput("countELAProficent"),
+            infoBoxOutput("countELAANotPro")
+
           )
         ),
         tabItem(

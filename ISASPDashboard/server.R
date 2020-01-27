@@ -220,6 +220,40 @@ shinyServer(function(input, output) {
 
   #### Domain SCORES ####
 
+  output$countELAProficent <- renderInfoBox({
+    DomainScores() %>%
+      filter(ELAAchLvl %in% c("P")) %>%
+      tally()->value1
+
+    infoBox("Number Proficient", value=value1, color = "yellow", width = 3)
+
+
+
+  })
+
+  output$countELAAdvanced <- renderInfoBox({
+    DomainScores() %>%
+      filter(ELAAchLvl %in% c("A")) %>%
+      tally()->value1
+
+    infoBox("Number Advanced", value=value1,  color = "olive", width = 3)
+
+
+
+  })
+
+  output$countELAANotPro <- renderInfoBox({
+    DomainScores() %>%
+      filter(ELAAchLvl %in% c("N")) %>%
+      tally()->value1
+
+    infoBox("Number Advanced", value=value1,  color = "red", width = 3)
+
+
+
+  })
+
+
 
   ##### Data Operations #####
 
@@ -231,55 +265,104 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <- FilteredData()
+    df <-DomainScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
       return(NULL)
     }
     df %>%
-      summarise(meanScore = mean(pctCorrect)) %>%
-      pivot_wider(names_from = testLable, values_from = meanScore) %>%
+      group_by(Grade)%>%
+      summarise("ELA" = mean(ELAScaleScore),
+                "Reading"=mean(ReadScaleScore),
+                "language/Writing"=mean(LWScaleScore),
+                "Science"=mean(SciScaleScore),
+                "Math"=mean(MathScaleScore)) %>%
       arrange(Grade) %>%
       select(
         "Grade",
-        one_of("LS", "PS", "ES")
-      ) -> meanSubScores
+        one_of("ELA","Reading", "language/Writing","Science","Math")
+      ) -> meanDomainScores
 
-    return(meanSubScores)
+    return(meanDomainScores)
   })
-
   ###### Median Domain Scores ######
   MedianDomain <- reactive({
     if (fileReady() == F) {
       return(NULL)
     }
 
-    df <- FilteredData()
+    df <-DomainScores()
 
     # if no students return Nothing
     if (length(df) < 1) {
       return(NULL)
     }
     df %>%
-      summarise(medianScore = median(pctCorrect)) %>%
-      pivot_wider(names_from = testLable, values_from = medianScore) %>%
+      group_by(Grade)%>%
+      summarise("ELA" = median(ELAScaleScore),
+                "Reading"=median(ReadScaleScore),
+                "language/Writing"=mean(LWScaleScore),
+                "Science"=median(SciScaleScore),
+                "Math"=median(MathScaleScore)) %>%
       arrange(Grade) %>%
       select(
         "Grade",
-        one_of("LS", "PS", "ES")
-      ) -> medianSubScores
+        one_of("ELA","Reading", "language/Writing", "Science","Math")
+      ) -> medianDomainScores
 
-    return(medianSubScores)
+    return(medianDomainScores)
+  })
+
+  ###### Filter Domain Scores ######
+  FilteredDomainScores <- reactive({
+
   })
 
   ##### UI Set Up #####
 
-  ###### Mean Domain Scores ######
-
-
-
-
+  output$tableOutputDomain <- renderUI({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+    if (input$tableType == "Number of Questions") {
+      output$domain <- renderDataTable(datatable(MeanDomain(), rownames = FALSE, options = list(dom = "t"))%>%
+                                         formatRound(columns = c(2:7), digits = 0) %>%
+                                         formatStyle(columns = c(1), fontWeight = "bold") %>%
+                                         formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5") %>%
+                                         formatStyle(columns = c(2:7), border = "1px solid #ddd"))
+      dataTableOutput("domain")
+    }
+    else if (input$tableType == "Mean Scores") {
+      output$domain <- renderDataTable(datatable(MeanDomain(),
+                                                  rownames = FALSE,
+                                                  options = list(
+                                                    dom = "t"
+                                                  )
+      ) %>%
+        formatRound(columns = c(2:7), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5") %>%
+        formatStyle(columns = c(2:7), border = "1px solid #ddd"))
+      dataTableOutput("domain")
+    }
+    else if (input$tableType == "Median Scores") {
+      output$domain <- renderDataTable(datatable(MedianDomain(),
+                                                  rownames = FALSE,
+                                                  options = list(
+                                                    dom = "t"
+                                                  )
+      ) %>%
+        formatRound(columns = c(2:7), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5") %>%
+        formatStyle(columns = c(2:7), border = "1px solid #ddd"))
+      dataTableOutput("domain")
+    }
+    else {
+      return(NULL)
+    }
+  })
 
 
   #### Subtests ####
@@ -376,7 +459,6 @@ shinyServer(function(input, output) {
 
     return(meanSubScores)
   })
-
   ###### Mean Score: Language/Writing ######
   MeanSubTestScoresLW <- reactive({
     if (fileReady() == F) {
@@ -401,7 +483,6 @@ shinyServer(function(input, output) {
 
     return(meanSubScores)
   })
-
   ###### Mean Score: Math ######
   MeanSubTestScoresMath <- reactive({
     if (fileReady() == F) {
@@ -425,7 +506,6 @@ shinyServer(function(input, output) {
 
     return(meanSubScores)
   })
-
   ###### Mean Score: Science ######
   MeanSubTestScoresScience <- reactive({
     if (fileReady() == F) {
@@ -542,6 +622,10 @@ shinyServer(function(input, output) {
 
     return(medianSubScores)
   })
+
+
+
+
 
   ######### Reporting / Cuttofs?
   PotentialHonorsSci <- reactive({

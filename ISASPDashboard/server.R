@@ -217,6 +217,65 @@ shinyServer(function(input, output) {
   })
 
 
+
+  #### Domain SCORES ####
+
+  ##### Ranges #####
+
+  ##### Mean Domain Scores #####
+  MeanDomain <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+
+    df <- FilteredData()
+
+    # if no students return Nothing
+    if (length(df) < 1) {
+      return(NULL)
+    }
+    df %>%
+      summarise(meanScore = mean(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = meanScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        one_of("LS", "PS", "ES")
+      ) -> meanSubScores
+
+    return(meanSubScores)
+  })
+
+  ##### Median Domain Scores #####
+  MedianDomain <- reactive({
+    if (fileReady() == F) {
+      return(NULL)
+    }
+
+    df <- FilteredData()
+
+    # if no students return Nothing
+    if (length(df) < 1) {
+      return(NULL)
+    }
+    df %>%
+      summarise(medianScore = median(pctCorrect)) %>%
+      pivot_wider(names_from = testLable, values_from = medianScore) %>%
+      arrange(Grade) %>%
+      select(
+        "Grade",
+        one_of("LS", "PS", "ES")
+      ) -> medianSubScores
+
+    return(medianSubScores)
+  })
+
+
+
+
+
+
+
   #### Number of Questions  By Grade ####
 
   ###### Number of Questions: Reading ######

@@ -109,6 +109,11 @@ shinyUI(
                 id = "tabMath",
                 title = "Math",
                 uiOutput("tableOutputMath")
+              ),
+              tabPanel(
+                id = "tabDomainScores",
+                title = "Domain",
+                #uiOutput("tableOutputMath")
               )
             )
           )

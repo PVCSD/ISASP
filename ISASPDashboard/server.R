@@ -57,15 +57,17 @@ shinyServer(function(input, output) {
     return(studentDemo)
   })
 
-  #get Domain Scores
+  # get Domain Scores
   DomainScores <- reactive({
     df <- filedata()
     df %>%
-      select(StateID, Grade,
-             ELAAchLvl, ELAScaleScore,
-             ReadScaleScore, LWScaleScore,
-             MathAchLvl, MathScaleScore,
-             SciScaleScore) -> studenDomainScores
+      select(
+        StateID, Grade,
+        ELAAchLvl, ELAScaleScore,
+        ReadScaleScore, LWScaleScore,
+        MathAchLvl, MathScaleScore,
+        SciScaleScore
+      ) -> studenDomainScores
     return(studenDomainScores)
   })
 
@@ -225,14 +227,11 @@ shinyServer(function(input, output) {
 
 
     FilteredData() %>%
-      left_join(dfDomainScores)%>%
+      left_join(dfDomainScores) %>%
       filter(ELAAchLvl %in% c("P")) %>%
-      tally()->value1
+      tally() -> value1
 
-    infoBox("Number Proficient", value=value1, color = "yellow", width = 12)
-
-
-
+    infoBox("Number Proficient", value = value1, color = "yellow", width = 12)
   })
 
   output$countELAAdvanced <- renderUI({
@@ -240,30 +239,23 @@ shinyServer(function(input, output) {
 
 
     FilteredData() %>%
-      left_join(dfDomainScores)%>%
+      left_join(dfDomainScores) %>%
       filter(ELAAchLvl %in% c("A")) %>%
-      tally()->value1
+      tally() -> value1
 
-    infoBox("Number Advanced", value=value1,  color = "olive", width = 12)
-
-
-
+    infoBox("Number Advanced", value = value1, color = "olive", width = 12)
   })
 
   output$countELAANotPro <- renderUI({
-
     dfDomainScores <- DomainScores()
 
 
     FilteredData() %>%
-      left_join(dfDomainScores)%>%
+      left_join(dfDomainScores) %>%
       filter(ELAAchLvl %in% c("N")) %>%
-      tally()->value1
+      tally() -> value1
 
-    infoBox("Number Advanced", value=value1,  color = "red", width = 12)
-
-
-
+    infoBox("Number Advanced", value = value1, color = "red", width = 12)
   })
 
 
@@ -278,7 +270,7 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <-FilteredData()
+    df <- FilteredData()
     scores <- DomainScores()
 
     # if no students return Nothing
@@ -296,7 +288,7 @@ shinyServer(function(input, output) {
       arrange(Grade) %>%
       select(
         "Grade",
-        one_of("ELA","Reading", "language/Writing","Science","Math")
+        one_of("ELA", "Reading", "language/Writing", "Science", "Math")
       ) -> meanDomainScores
 
     return(meanDomainScores)
@@ -307,7 +299,7 @@ shinyServer(function(input, output) {
       return(NULL)
     }
 
-    df <-FilteredData()
+    df <- FilteredData()
     scores <- DomainScores()
 
     # if no students return Nothing
@@ -325,7 +317,7 @@ shinyServer(function(input, output) {
       arrange(Grade) %>%
       select(
         "Grade",
-        one_of("ELA","Reading", "language/Writing", "Science","Math")
+        one_of("ELA", "Reading", "language/Writing", "Science", "Math")
       ) -> medianDomainScores
 
     return(medianDomainScores)
@@ -343,19 +335,19 @@ shinyServer(function(input, output) {
       return(NULL)
     }
     if (input$tableType == "Number of Questions") {
-      output$domain <- renderDataTable(datatable(MeanDomain(), rownames = FALSE, options = list(dom = "t"))%>%
-                                         formatRound(columns = c(2:7), digits = 0) %>%
-                                         formatStyle(columns = c(1), fontWeight = "bold") %>%
-                                         formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5") %>%
-                                         formatStyle(columns = c(2:7), border = "1px solid #ddd"))
+      output$domain <- renderDataTable(datatable(MeanDomain(), rownames = FALSE, options = list(dom = "t")) %>%
+        formatRound(columns = c(2:7), digits = 0) %>%
+        formatStyle(columns = c(1), fontWeight = "bold") %>%
+        formatStyle(columns = c(1), backgroundColor = "#656565", color = "#A5A5A5") %>%
+        formatStyle(columns = c(2:7), border = "1px solid #ddd"))
       dataTableOutput("domain")
     }
     else if (input$tableType == "Mean Scores") {
       output$domain <- renderDataTable(datatable(MeanDomain(),
-                                                  rownames = FALSE,
-                                                  options = list(
-                                                    dom = "t"
-                                                  )
+        rownames = FALSE,
+        options = list(
+          dom = "t"
+        )
       ) %>%
         formatRound(columns = c(2:7), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -365,10 +357,10 @@ shinyServer(function(input, output) {
     }
     else if (input$tableType == "Median Scores") {
       output$domain <- renderDataTable(datatable(MedianDomain(),
-                                                  rownames = FALSE,
-                                                  options = list(
-                                                    dom = "t"
-                                                  )
+        rownames = FALSE,
+        options = list(
+          dom = "t"
+        )
       ) %>%
         formatRound(columns = c(2:7), digits = 0) %>%
         formatStyle(columns = c(1), fontWeight = "bold") %>%
@@ -511,7 +503,7 @@ shinyServer(function(input, output) {
       arrange(Grade) %>%
       select(
         "Grade",
-        one_of( "RPK", "PDW", "TTP", "COSE-KOL", "VAU")
+        one_of("RPK", "PDW", "TTP", "COSE-KOL", "VAU")
       ) -> meanSubScores
 
     return(meanSubScores)

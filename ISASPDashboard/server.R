@@ -278,15 +278,13 @@ shinyServer(function(input, output) {
       return(NULL)
     }
     df %>%
-      left_join(scores) %>%
-      group_by(Grade) %>%
-      summarise(
-        "ELA" = mean(ELAScaleScore),
-        "Reading" = mean(ReadScaleScore),
-        "language/Writing" = mean(LWScaleScore),
-        "Science" = mean(SciScaleScore),
-        "Math" = mean(MathScaleScore)
-      ) %>%
+      left_join(scores)%>%
+      group_by(Grade)%>%
+      summarise("ELA" = mean(ELAScaleScore, na.rm = T),
+                "Reading"=mean(ReadScaleScore, na.rm = T),
+                "language/Writing"=mean(LWScaleScore, na.rm = T),
+                "Science"=mean(SciScaleScore, na.rm = T),
+                "Math"=mean(MathScaleScore, na.rm = T)) %>%
       arrange(Grade) %>%
       select(
         "Grade",
@@ -309,15 +307,13 @@ shinyServer(function(input, output) {
       return(NULL)
     }
     df %>%
-      left_join(scores) %>%
-      group_by(Grade) %>%
-      summarise(
-        "ELA" = median(ELAScaleScore),
-        "Reading" = median(ReadScaleScore),
-        "language/Writing" = mean(LWScaleScore),
-        "Science" = median(SciScaleScore),
-        "Math" = median(MathScaleScore)
-      ) %>%
+      left_join(scores)%>%
+      group_by(Grade)%>%
+      summarise("ELA" = median(ELAScaleScore, na.rm = T),
+                "Reading"=median(ReadScaleScore, na.rm = T),
+                "language/Writing"=mean(LWScaleScore, na.rm = T),
+                "Science"=median(SciScaleScore, na.rm = T),
+                "Math"=median(MathScaleScore, na.rm = T)) %>%
       arrange(Grade) %>%
       select(
         "Grade",

@@ -14,6 +14,7 @@ shinyUI(
     dashboardSidebar(
       sidebarMenu(
         menuItem("Upload", tabName = "upload", icon = icon("upload")),
+        menuItem("Building Report", tabName = "buildingReport", icon = icon("school") ),
         menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
         menuItem("Honors Science", tabName = "cutoffs", icon = icon("flask"))
       )
@@ -42,6 +43,11 @@ shinyUI(
               )
             )
           )
+        ),
+        tabItem(
+          tabName = "buildingReport",
+          fluidPage()
+
         ),
         tabItem(
           tabName = "dashboard",

@@ -46,7 +46,9 @@ shinyUI(
         ),
         tabItem(
           tabName = "buildingReport",
-          fluidPage()
+          fluidPage(
+
+          )
 
         ),
         tabItem(

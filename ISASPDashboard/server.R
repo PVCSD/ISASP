@@ -66,6 +66,7 @@ shinyServer(function(input, output) {
         ELAAchLvl, ELAScaleScore,
         ReadScaleScore, LWScaleScore,
         MathAchLvl, MathScaleScore,
+        SciAchLvl,
         SciScaleScore
       ) -> studenDomainScores
     return(studenDomainScores)
@@ -231,7 +232,7 @@ shinyServer(function(input, output) {
       filter(ELAAchLvl %in% c("P")) %>%
       tally() -> value1
 
-    infoBox("Number Proficient", value = value1, color = "yellow", width = 12)
+    valueBox("Proficient", value = value1, color = "yellow", width = 4)
   })
 
   output$countELAAdvanced <- renderUI({
@@ -243,7 +244,7 @@ shinyServer(function(input, output) {
       filter(ELAAchLvl %in% c("A")) %>%
       tally() -> value1
 
-    infoBox("Number Advanced", value = value1, color = "olive", width = 12)
+    valueBox("Advanced", value = value1, color = "olive", width = 4)
   })
 
   output$countELAANotPro <- renderUI({
@@ -255,9 +256,86 @@ shinyServer(function(input, output) {
       filter(ELAAchLvl %in% c("N")) %>%
       tally() -> value1
 
-    infoBox("Number Advanced", value = value1, color = "red", width = 12)
+    valueBox("Not Proficent", value = value1, color = "red", width = 4)
   })
 
+
+
+#### MATH
+  output$countMathProficent <- renderUI({
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores) %>%
+      filter(MathAchLvl %in% c("P")) %>%
+      tally() -> value1
+
+    valueBox("Proficient", value = value1, color = "yellow", width = 4)
+  })
+
+  output$countMathAdvanced <- renderUI({
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores) %>%
+      filter(MathAchLvl %in% c("A")) %>%
+      tally() -> value1
+
+    valueBox("Advanced", value = value1, color = "olive", width = 4)
+  })
+
+  output$countMathNotPro <- renderUI({
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores) %>%
+      filter(MathAchLvl %in% c("N")) %>%
+      tally() -> value1
+
+    valueBox("Not Proficent", value = value1, color = "red", width = 4)
+  })
+
+
+
+  ## science
+  output$countSciProficent <- renderUI({
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores) %>%
+      filter(SciAchLvl %in% c("P")) %>%
+      tally() -> value1
+
+    valueBox("Proficient", value = value1, color = "yellow", width = 4)
+  })
+
+  output$countSciAdvanced <- renderUI({
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores) %>%
+      filter(SciAchLvl %in% c("A")) %>%
+      tally() -> value1
+
+    valueBox("Advanced", value = value1, color = "olive", width = 4)
+  })
+
+  output$countSciNotPro <- renderUI({
+    dfDomainScores <- DomainScores()
+
+
+    FilteredData() %>%
+      left_join(dfDomainScores) %>%
+      filter(SciAchLvl %in% c("N")) %>%
+      tally() -> value1
+
+    valueBox("Not Proficent", value = value1, color = "red", width = 4)
+  })
 
 
   ##### Data Operations #####

@@ -402,9 +402,6 @@ shinyServer(function(input, output) {
   })
 
   ###### Filter Domain Scores ######
-  FilteredDomainScores <- reactive({
-
-  })
 
   ##### UI Set Up #####
 

@@ -8,6 +8,8 @@ library(shinydashboard)
 library(readr)
 
 
+no_legend <- theme(legend.position = "none")
+
 shinyServer(function(input, output) {
   grades_possible <- function(df) {
     df %>%
@@ -1136,6 +1138,27 @@ shinyServer(function(input, output) {
 
     return(list(brks = brks, clrs = clrs))
   }
+
+
+  ##### Plots #####
+
+  output$schoolELA <- renderPlot({
+
+    dfDomainScores <- DomainScores()
+
+    FilteredData() %>%
+      left_join(dfDomainScores) %>%
+      mutate(order = if_else(ELAAchLvl=="A", 3, if_else(ELAAchLvl=="P", 2,1)) ) %>%
+      na.omit() %>%
+      ggplot(aes(x=order, fill=as.factor(order)))+
+      geom_bar()+
+      scale_x_continuous(breaks=1:3, labels= c("", "", ""))+
+      labs(title = "", x="", y="")+
+      coord_flip()+
+      theme_minimal()+
+      scale_fill_manual(values = c("#DD4B39", "#F39C12", "#3D9970"))+
+      no_legend
+  })
 
 
   ##### Sanity checks #####

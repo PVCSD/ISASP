@@ -50,9 +50,11 @@ shinyUI(
 
             box("ELA",
               width = 4,
+              plotOutput("schoolELA", height = "200px"),
               uiOutput("countELAAdvanced"),
               uiOutput("countELAProficent"),
               uiOutput("countELAANotPro")
+
             ),
 
             box("Math",
@@ -66,7 +68,9 @@ shinyUI(
                 uiOutput("countSciAdvanced"),
                 uiOutput("countSciProficent"),
                 uiOutput("countSciNotPro")
-            )
+            ),
+
+
 
           )
 

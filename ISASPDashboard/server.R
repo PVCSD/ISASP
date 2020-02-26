@@ -744,6 +744,16 @@ shinyServer(function(input, output) {
   })
 
 
+  #### Get list of grades ####
+  GradeList <- reactive({
+    filedata() %>%
+      select(Grade) %>%
+      distinct() -> list_of_grades
+
+    return(list_of_grades)
+  })
+
+
   #### Get list of schools ####
   SchoolList <- reactive({
     filedata() %>%
@@ -775,6 +785,22 @@ shinyServer(function(input, output) {
 
     return(df)
   })
+
+
+  ### Filter By Grade
+  GradeFilter <- reactive({
+    if (CheckFilterBuildings() == T) {
+      selected_grades <- input$gradeSelect
+      df <- StudentData() %>%
+        filter(grade %in% selected_grades)
+    }
+    else {
+      df <- StudentData()
+    }
+
+    return(df)
+  })
+
 
   ### Filter By Building
   BuildingFilter <- reactive({
@@ -1125,8 +1151,25 @@ shinyServer(function(input, output) {
         multiple = T
       )
     }
+
+
+
+
   })
 
+
+  output$gradeFilter <- renderUI({
+    if (fileReady() == F) {
+
+    }
+    else {
+      selectizeInput("gradeSelect",
+                     label = "Filter By grade",
+                     choices = c(GradeList()),
+                     multiple = T
+      )
+    }
+  })
 
   # conditional formatting
   column_cond_format <- function(col_max, col_min, pal = c("#ea4335", "white", "#34a853")) {

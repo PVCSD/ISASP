@@ -89,6 +89,7 @@ shinyUI(
                           )
                         ),
                         uiOutput("buildingFilter"),
+                        uiOutput("gradeFilter"),
                         selectizeInput("gender",
                                        label = "Choose Gender",
                                        choices = c(

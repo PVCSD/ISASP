@@ -789,7 +789,7 @@ shinyServer(function(input, output) {
 
   ### Filter By Grade
   GradeFilter <- reactive({
-    if (CheckFilterBuildings() == T) {
+    if (CheckFilterGrades() == T) {
       selected_grades <- input$gradeSelect
       print(selected_grades)
       df <- StudentData() %>%
@@ -805,7 +805,7 @@ shinyServer(function(input, output) {
 
   ### Filter By Building
   BuildingFilter <- reactive({
-    if (CheckFilterGrades() == T) {
+    if (CheckFilterBuildings() == T) {
       selected_buildings <- input$buildingSelect
       df <- GradeFilter() %>%
         filter(SchoolName %in% selected_buildings)

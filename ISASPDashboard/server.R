@@ -54,7 +54,7 @@ shinyServer(function(input, output) {
       select(DistrictName, SchoolName, LastName, FirstName, Gender, StateID, DistrictID, Grade,
         AmericanIndianorAlaskan, Asian, AfricanAmerican, HispanicLatino, HawaiianPacificIslander,
         White, MilitaryConnected, SE,
-        "plan504" = `504.0`, FRL, GT, ELL, T1L, T1M, Homeless
+        "plan504" = `504`, FRL, GT, ELL, T1L, T1M, Homeless
       ) -> studentDemo
     return(studentDemo)
   })

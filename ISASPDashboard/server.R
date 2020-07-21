@@ -86,18 +86,18 @@ shinyServer(function(input, output) {
 
     ### KID ###
     df %>%
-      select(StateID, Grade, # identifer and grade
+      select(StateID, Grade, # identifier and grade
         "testLable" = KIDLabel, "pctCorrect" = KIDPctCorrect, "pointsPossible" = KIDPntPoss, "subScore" = KIDRawScore
       ) -> scoresKID
     ### CS ###
     df %>%
-      select(StateID, Grade, # identifer and grade
+      select(StateID, Grade, # identifier and grade
         "testLable" = CSLabel, "pctCorrect" = CSPctCorrect, "pointsPossible" = CSPntPoss, "subScore" = CSRawScore
       ) -> scoresCS
 
     ### IKI ###
     df %>%
-      select(StateID, Grade, # identifer and grade
+      select(StateID, Grade, # identifier and grade
         "testLable" = IKILabel, "pctCorrect" = IKIPctCorrect, "pointsPossible" = IKIPntPoss, "subScore" = IKIRawScore
       ) -> scoresIKI
 
